@@ -25,6 +25,7 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
       <div className="flex items-center space-x-6">
         <Link href="/">
           <Image
+            priority
             src="/logo.png"
             alt="SDG 12"
             width="150"
