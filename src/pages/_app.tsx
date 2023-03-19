@@ -3,18 +3,21 @@ import { Montserrat } from "next/font/google";
 import Head from "next/head";
 import clsx from "clsx";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import "@/styles/tailwind.css";
 
 // Components
 import { Navbar } from "@/components/Navbar";
+import { useRouter } from "next/router";
 
 const inter = Montserrat({
   subsets: ["latin"],
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
+
   return (
     <>
       <Head>
@@ -27,14 +30,29 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <Navbar fontFamily={inter.className} />
 
-      <div
-        className={clsx(
-          inter.className,
-          "container mx-auto px-4 pb-10 md:w-11/12 md:px-0"
-        )}
-      >
-        <Component {...pageProps} />
-      </div>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={pathname}
+          initial={{
+            opacity: 0,
+            scale: 0.9,
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+          }}
+          exit={{
+            opacity: 0,
+            scale: 0.9,
+          }}
+          className={clsx(
+            inter.className,
+            "container mx-auto  px-4 pb-10 md:w-11/12 md:px-0"
+          )}
+        >
+          <Component {...pageProps} />
+        </motion.div>
+      </AnimatePresence>
 
       <motion.div
         whileHover={{
