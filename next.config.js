@@ -1,11 +1,15 @@
-const withPWA = require("next-pwa")({
+const pwaConfig = {
   dest: "public",
-});
+};
 
 /** @type {import('next').NextConfig} */
-module.exports = withPWA({
+const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ["picsum.photos"],
   },
-});
+};
+
+const withPWA = require("next-pwa")(pwaConfig);
+
+module.exports = withPWA(nextConfig);
