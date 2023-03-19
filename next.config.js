@@ -6,7 +6,7 @@ const pwaConfig = {
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["picsum.photos"],
+    domains: ["picsum.photos", "i.imgur.com", "firebasestorage.googleapis.com"],
   },
 };
 
