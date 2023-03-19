@@ -5,7 +5,7 @@ export default function Document() {
   const description =
     "Wonder what happens if you don't recyle? Take a look at items on our database to see what impacts could be done if you recyle.";
   const themeColor = "#145A32";
-  const url = "https://recylcing-app.netlify.app";
+  const url = "https://recycling-app.netlify.app";
 
   return (
     <Html lang="en">
@@ -21,43 +21,34 @@ export default function Document() {
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content={themeColor} />
 
-        <link rel="apple-touch-icon" href="/icons/512x512.png" />
+        <link rel="apple-touch-icon" href="/icons/ios/512.png" />
         <link
           rel="apple-touch-icon"
           sizes="192x192"
-          href="/icons/192x192.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="384x384"
-          href="/icons/384x384.png"
+          href="/icons/ios/192.png"
         />
         <link
           rel="apple-touch-icon"
           sizes="512x512"
-          href="/icons/512x512.png"
+          href="/icons/ios/512.png"
         />
 
         <link rel="icon" type="image/png" href="/icons/favicon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <link
-          rel="mask-icon"
-          href="/icons/icons/384x384.png"
-          color={themeColor}
-        />
+        <link rel="mask-icon" href="/icons/ios/512.png" color={themeColor} />
         <link rel="shortcut icon" href="/favicon.ico" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" content={url} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`${url}/icons/512x512.png`} />
+        <meta name="twitter:image" content={`${url}/icons/ios/512.png`} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:site_name" content={title} />
         <meta property="og:url" content={url} />
-        <meta property="og:image" content={`${url}/icons/512x512.png`} />
+        <meta property="og:image" content={`${url}/icons/ios/512.png`} />
       </Head>
 
       <body className="overflow-x-hidden bg-[url('/background.png')] bg-cover bg-fixed bg-center">
