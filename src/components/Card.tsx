@@ -8,10 +8,17 @@ interface ICardProps {
   id: string;
   image: string;
   name: string;
+  decomposeTime?: string;
   type?: "category" | "item";
 }
 
-export const Card = ({ id, type = "item", image, name }: ICardProps) => {
+export const Card = ({
+  id,
+  type = "item",
+  image,
+  name,
+  decomposeTime,
+}: ICardProps) => {
   const [_, setCategories] = useAtom(categoriesAtom);
   const [__, setItems] = useAtom(itemsAtom);
 
@@ -34,6 +41,10 @@ export const Card = ({ id, type = "item", image, name }: ICardProps) => {
           alt="Item image"
           width={75}
           height={75}
+          style={{
+            width: 75,
+            height: 75,
+          }}
           className="flex-shrink-0 rounded-lg object-cover"
         />
       </div>
@@ -43,10 +54,12 @@ export const Card = ({ id, type = "item", image, name }: ICardProps) => {
 
         {type === "item" && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex w-max items-center rounded-lg bg-red-600/10 px-2 py-1 text-xs text-red-600">
-              <TbClock className="mr-1" />
-              12 year(s)
-            </span>
+            {decomposeTime && (
+              <span className="inline-flex w-max items-center rounded-lg bg-red-600/10 px-2 py-1 text-xs text-red-600">
+                <TbClock className="mr-1" />
+                {decomposeTime}
+              </span>
+            )}
 
             <span className="inline-flex w-max items-center rounded-lg bg-green-600/10 px-2 py-1 text-xs text-green-600">
               <TbRecycle className="mr-1" />3 benefit(s)
