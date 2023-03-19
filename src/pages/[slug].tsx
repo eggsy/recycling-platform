@@ -7,6 +7,7 @@ import { MDXRemote } from "next-mdx-remote";
 
 // Components
 import { PeopleCard } from "@/components/PeopleCard";
+import { Layout } from "@/components/Layout";
 
 const postsDirectory = join(process.cwd(), "src/posts");
 
@@ -37,23 +38,12 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
 }
 
 export default function Post(props: any) {
-  const router = useRouter();
-
   return (
-    <div className="rounded-lg bg-white/70 backdrop-blur-md md:h-[80vh] md:max-h-[1000px]">
-      <header className="flex items-center gap-3 rounded-t-lg bg-white px-6 py-3">
-        <TbChevronLeft
-          size={24}
-          className="cursor-pointer rounded-full bg-black/10 p-1 text-black/90 transition-colors hover:bg-black hover:text-white"
-          onClick={() => router.back()}
-        />
-
-        <h1 className="font-medium">{props.source.frontmatter.title}</h1>
-      </header>
-
-      <main className="prose w-full max-w-full p-6 marker:text-green-600">
-        <MDXRemote {...props.source} components={{ PeopleCard }} />
-      </main>
-    </div>
+    <Layout
+      title={props.source.frontmatter.title}
+      mainClass="prose max-w-full marker:text-green-600"
+    >
+      <MDXRemote {...props.source} components={{ PeopleCard }} />
+    </Layout>
   );
 }
