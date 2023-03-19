@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <div
         className={clsx(
           inter.className,
-          "container px-4 md:px-0 md:w-11/12 mx-auto pb-10"
+          "container mx-auto px-4 pb-10 md:w-11/12 md:px-0"
         )}
       >
         <Component {...pageProps} />

@@ -60,7 +60,7 @@ export default function Document() {
         <meta property="og:image" content={`${url}/icons/512x512.png`} />
       </Head>
 
-      <body className="bg-[url('/background.png')] bg-fixed bg-center bg-cover">
+      <body className="bg-[url('/background.png')] bg-cover bg-fixed bg-center">
         <Main />
         <NextScript />
       </body>
