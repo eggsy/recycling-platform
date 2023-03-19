@@ -40,7 +40,7 @@ export default function Post(props: any) {
   const router = useRouter();
 
   return (
-    <div className="h-[80vh] max-h-[1000px] rounded-lg bg-white/70 backdrop-blur-md">
+    <div className="rounded-lg bg-white/70 backdrop-blur-md md:h-[80vh] md:max-h-[1000px]">
       <header className="flex items-center gap-3 rounded-t-lg bg-white px-6 py-3">
         <TbChevronLeft
           size={24}

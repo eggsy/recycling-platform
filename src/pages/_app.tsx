@@ -59,7 +59,7 @@ export default function App({ Component, pageProps }: AppProps) {
           rotate: 10,
           scale: 1.1,
         }}
-        className="fixed right-0 -bottom-4"
+        className="fixed -z-10 md:z-10 right-0 -bottom-4"
       >
         <Image
           priority

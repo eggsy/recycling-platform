@@ -70,8 +70,8 @@ export default function Home() {
   }, [search, selectedCategory]);
 
   return (
-    <div className="flex h-[80vh] max-h-[1000px] gap-8">
-      <aside className="flex w-3/12 flex-shrink-0 flex-col rounded-lg bg-gray-100/70 ring-1 ring-black/10 backdrop-blur-md">
+    <div className="flex flex-col gap-8 md:h-[80vh] md:max-h-[1000px] md:flex-row">
+      <aside className="flex max-h-[30vh] flex-shrink-0 flex-col rounded-lg bg-gray-100/70 ring-1 ring-black/10 backdrop-blur-md md:max-h-full md:w-3/12">
         <div className="flex items-center rounded-t-lg border-b border-black/10 bg-gray-100/70 backdrop-blur-md">
           <TbSearch className="ml-4 text-lg text-black/50" />
           <input
@@ -150,7 +150,7 @@ export default function Home() {
             </header>
 
             <div className="flex flex-col gap-4 px-6 py-4">
-              <section className="flex justify-between gap-4">
+              <section className="flex flex-col-reverse justify-between gap-4 md:flex-row">
                 <div className="flex flex-col space-y-8">
                   <p className="text-black/80">
                     <span className="rounded-lg bg-black/10 px-3 py-1 font-medium">
@@ -187,7 +187,7 @@ export default function Home() {
                   alt="Image"
                   width={300}
                   height={300}
-                  className="flex-shrink-0 rounded-lg ring-1 ring-black/10"
+                  className="flex-shrink-0  rounded-lg ring-1 ring-black/10"
                   draggable="false"
                 />
               </section>
