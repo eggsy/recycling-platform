@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@formkit/auto-animate': 1.0.0-beta.6
+  '@tailwindcss/forms': ^0.5.3
   '@tailwindcss/typography': ^0.5.9
   '@types/node': 18.15.3
   '@types/react': 18.0.28
@@ -10,6 +11,7 @@ specifiers:
   clsx: ^1.2.1
   eslint: 8.36.0
   eslint-config-next: 13.2.4
+  filepond: ^4.30.4
   firebase: ^9.18.0
   framer-motion: ^10.6.0
   jotai: ^2.0.3
@@ -21,6 +23,7 @@ specifiers:
   prettier-plugin-tailwindcss: ^0.2.5
   react: 18.2.0
   react-dom: 18.2.0
+  react-filepond: ^7.1.2
   react-icons: ^4.8.0
   sonner: ^0.2.0
   tailwindcss: ^3.2.7
@@ -33,6 +36,7 @@ dependencies:
   '@types/react-dom': 18.0.11
   eslint: 8.36.0
   eslint-config-next: 13.2.4_j4766f7ecgqbon3u7zlxn5zszu
+  filepond: 4.30.4
   firebase: 9.18.0
   framer-motion: 10.6.0_biqbaboplfbrettd7655fr4n2y
   jotai: 2.0.3_react@18.2.0
@@ -41,11 +45,13 @@ dependencies:
   next-pwa: 5.6.0_next@13.2.4
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-filepond: 7.1.2_mnl76jm3ryge2poziybvdyye2a
   react-icons: 4.8.0_react@18.2.0
   sonner: 0.2.0_biqbaboplfbrettd7655fr4n2y
   typescript: 5.0.2
 
 devDependencies:
+  '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.7
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
   autoprefixer: 10.4.14_postcss@8.4.21
   clsx: 1.2.1
@@ -2129,6 +2135,15 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /@tailwindcss/forms/0.5.3_tailwindcss@3.2.7:
+    resolution: {integrity: sha512-y5mb86JUoiUgBjY/o6FJSFZSEttfb3Q5gllE4xoKjAAD+vBrnIhE4dViwUuow3va8mpH4s9jyUbUbrRGoRdc2Q==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
+    dependencies:
+      mini-svg-data-uri: 1.4.4
+      tailwindcss: 3.2.7_postcss@8.4.21
+    dev: true
+
   /@tailwindcss/typography/0.5.9_tailwindcss@3.2.7:
     resolution: {integrity: sha512-t8Sg3DyynFysV9f4JDOVISGsjazNb48AeIYQwcL+Bsq5uf4RYL75C1giZ43KISjeDGBaTN3Kxh7Xj/vRSMJUUg==}
     peerDependencies:
@@ -3440,6 +3455,10 @@ packages:
       minimatch: 5.1.6
     dev: false
 
+  /filepond/4.30.4:
+    resolution: {integrity: sha512-FCwsMvG9iiEs6uobdDrTaKsCgsqys0NuLgPPD8n37AYVYBiiDkrPkk9MSIU5rT2FahYcL1bScYI9huIPtlzqyA==}
+    dev: false
+
   /fill-range/7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
     engines: {node: '>=8'}
@@ -4741,6 +4760,11 @@ packages:
       braces: 3.0.2
       picomatch: 2.3.1
 
+  /mini-svg-data-uri/1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
+    dev: true
+
   /minimatch/3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
@@ -5352,6 +5376,18 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-filepond/7.1.2_mnl76jm3ryge2poziybvdyye2a:
+    resolution: {integrity: sha512-vrlx9o/n+jGikh6jLey+PpUGYtEZn8MdeB6JFeX/5/N/Mu75IHG+MFQbv8R27bNXvS41mDtV9Fo5DG+s6siVIA==}
+    peerDependencies:
+      filepond: '>=3.7.x < 5.x'
+      react: 16 - 18
+      react-dom: 16 - 18
+    dependencies:
+      filepond: 4.30.4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-icons/4.8.0_react@18.2.0:
