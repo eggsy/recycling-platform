@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.no-highlight {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .keep-scrolling {
   -ms-overflow-style: none;
   scrollbar-width: none;
