@@ -15,7 +15,7 @@ export const PeopleCard = ({
       target="_blank"
       rel="noopener noreferrer"
       title="Open LinkedIn profile"
-      className="inline-flex h-10 items-center rounded-lg bg-black/10 px-3 py-1 align-middle text-sm font-medium no-underline transition-colors hover:bg-black/20"
+      className="inline-flex h-10 m-px items-center rounded-lg bg-black/10 px-3 py-1 align-middle text-sm font-medium no-underline transition-colors hover:bg-black/20"
     >
       <Image
         src={image}
