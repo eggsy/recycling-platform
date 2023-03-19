@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { toast } from "sonner";
 
 initializeApp({
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,5 +17,20 @@ initializeApp({
 const firestore = getFirestore();
 const googleProvider = new GoogleAuthProvider();
 const auth = getAuth();
+const storage = getStorage();
 
-export { firestore, auth, googleProvider };
+export const signInPopup = () =>
+  signInWithPopup(auth, googleProvider)
+    .then((user) => {
+      toast.success(`Welcome ${user.user.displayName}!`);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+
+      console.error(errorCode, errorMessage, email, credential);
+    });
+
+export { firestore, auth, googleProvider, storage };
