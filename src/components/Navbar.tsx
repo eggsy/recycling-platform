@@ -1,11 +1,11 @@
-import { TbUser, TbMenu2, TbX, TbLogout } from "react-icons/tb";
+import { TbMenu2, TbX, TbLogout, TbLogin } from "react-icons/tb";
 import Image from "next/image";
 import clsx from "clsx";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/firebase/clientApp";
+import { auth } from "@/firebase/clientApp";
+import { signInPopup } from "@/firebase/clientApp";
 import { useAtom } from "jotai";
 import { authAtom, adminUids } from "@/store/auth";
 import { toast } from "sonner";
@@ -20,6 +20,89 @@ const links = [
     href: "/about",
   },
 ];
+
+export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
+  const [isOpen, setOpen] = useState(false);
+  const [authCache] = useAtom(authAtom);
+  const [parent] = useAutoAnimate();
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    toast.error("You have been logged out.");
+  };
+
+  return (
+    <nav
+      ref={parent}
+      className={clsx(
+        fontFamily,
+        "container mx-auto mb-4 flex flex-col gap-4 rounded-lg bg-gray-100/90 py-2 px-4 ring-1 ring-white/10 backdrop-blur-md md:my-6 md:w-11/12 md:py-0 md:px-0"
+      )}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-6">
+          <Link href="/">
+            <Image
+              priority
+              src="/logo.png"
+              alt="SDG 12"
+              width="150"
+              height="60"
+              className="rounded-lg md:rounded-none md:rounded-l-lg"
+              draggable="false"
+            />
+          </Link>
+
+          <Links isAdmin={authCache.isAdmin} className="hidden md:block" />
+        </div>
+
+        <div
+          title="User Profile"
+          className="no-highlight flex flex-col p-2 text-black md:mr-4"
+        >
+          {!authCache.user ? (
+            <LoginButton className="hidden md:flex" signInPopup={signInPopup} />
+          ) : (
+            <NavbarUser
+              displayName={authCache.user.displayName}
+              photoUrl={authCache.user.photoURL}
+              handleLogout={handleLogout}
+            />
+          )}
+
+          {!isOpen && (
+            <button type="button" onClick={() => setOpen(true)}>
+              <TbMenu2 size={24} className="md:hidden" />
+            </button>
+          )}
+
+          {isOpen && (
+            <button type="button" onClick={() => setOpen(false)}>
+              <TbX size={24} className="md:hidden" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {isOpen && (
+        <>
+          <Links isAdmin={adminUids.includes(authCache.user?.uid || "")} />
+
+          {!authCache.user ? (
+            <LoginButton signInPopup={signInPopup} />
+          ) : (
+            <NavbarUser
+              type="mobile"
+              displayName={authCache.user.displayName}
+              photoUrl={authCache.user.photoURL}
+              handleLogout={handleLogout}
+            />
+          )}
+        </>
+      )}
+    </nav>
+  );
+};
 
 const Links = ({
   className,
@@ -53,111 +136,72 @@ const Links = ({
   );
 };
 
-export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
-  const [isOpen, setOpen] = useState(false);
-  const [authCache] = useAtom(authAtom);
-  const [parent] = useAutoAnimate();
+const LoginButton = ({
+  signInPopup,
+  className,
+}: {
+  signInPopup: any;
+  className?: string;
+}) => (
+  <button
+    type="button"
+    className={clsx(
+      "mb-3 flex items-center justify-center space-x-2 md:mb-0 md:justify-start",
+      className
+    )}
+    onClick={() => signInPopup()}
+  >
+    <span className="text-sm">Sign in</span>
+    <TbLogin size={20} />
+  </button>
+);
 
-  const handleLogin = async () => {
-    signInWithPopup(auth, googleProvider)
-      .then((user) => {
-        toast.success(`Welcome ${user.user.displayName}!`);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
+const NavbarUser = ({
+  type = "desktop",
+  displayName,
+  photoUrl,
+  handleLogout,
+}: {
+  type?: "desktop" | "mobile";
+  displayName: string | null;
+  photoUrl: string | null;
+  handleLogout: any;
+}) => (
+  <div
+    className={clsx(
+      "items-center space-x-2",
+      type === "mobile"
+        ? "mb-3 flex justify-between rounded-lg"
+        : "hidden md:flex"
+    )}
+  >
+    <div className="flex flex-row-reverse items-center gap-2 md:flex-row">
+      <span className="block font-medium">{displayName}</span>
 
-        console.error(errorCode, errorMessage, email, credential);
-      });
-  };
+      {photoUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={photoUrl}
+          alt="User profile picture"
+          width="30"
+          height="30"
+          className={type === "mobile" ? "rounded-lg" : "rounded-full"}
+          referrerPolicy="no-referrer"
+          draggable="false"
+        />
+      )}
+    </div>
 
-  const handleLogout = async () => {
-    await auth.signOut();
-    toast.error("You have been logged out.");
-  };
-
-  return (
-    <nav
-      ref={parent}
+    <button
+      type="button"
+      title="Logout"
       className={clsx(
-        fontFamily,
-        "container mx-auto mb-4 flex flex-col gap-4 rounded-lg bg-gray-100/90 py-2 px-4 ring-1 ring-white/10 backdrop-blur-md md:my-6 md:w-11/12 md:py-0 md:px-0"
+        "bg-black/5 p-2 text-black/70 transition-colors hover:bg-red-600 hover:text-white",
+        type === "mobile" ? "rounded-lg" : "rounded-full"
       )}
+      onClick={handleLogout}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <Link href="/">
-            <Image
-              priority
-              src="/logo.png"
-              alt="SDG 12"
-              width="150"
-              height="60"
-              className="rounded-l-lg"
-              draggable="false"
-            />
-          </Link>
-
-          <Links isAdmin={authCache.isAdmin} className="hidden md:block" />
-        </div>
-
-        <div
-          title="User Profile"
-          className="no-highlight flex flex-col p-2 text-black md:mr-4"
-        >
-          {!authCache.user ? (
-            <button type="button" onClick={handleLogin} title="Login">
-              <TbUser size={24} className="hidden md:block" />
-            </button>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <span className="block font-medium">
-                {authCache.user?.displayName}
-              </span>
-
-              {authCache.user?.photoURL && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={authCache.user.photoURL}
-                  alt="User profile picture"
-                  width="30"
-                  height="30"
-                  className="rounded-full"
-                  referrerPolicy="no-referrer"
-                  draggable="false"
-                />
-              )}
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                title="Logout"
-                className="rounded-full bg-black/5 p-2 text-black/70 transition-colors hover:bg-red-600 hover:text-white"
-              >
-                <TbLogout />
-              </button>
-            </div>
-          )}
-
-          {!isOpen && (
-            <button type="button" onClick={() => setOpen(true)}>
-              <TbMenu2 size={24} className="md:hidden" />
-            </button>
-          )}
-
-          {isOpen && (
-            <button type="button" onClick={() => setOpen(false)}>
-              <TbX size={24} className="md:hidden" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {isOpen && (
-        <Links isAdmin={adminUids.includes(authCache.user?.uid || "")} />
-      )}
-    </nav>
-  );
-};
+      <TbLogout />
+    </button>
+  </div>
+);
