@@ -9,65 +9,41 @@ import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
 import { useAtom } from "jotai";
-import { selectedAtom } from "@/store/selected";
 import { motion, AnimatePresence } from "framer-motion";
+import { categoriesAtom } from "@/store/categories";
+import { itemsAtom } from "@/store/items";
 
 // Components
 import { Card } from "@/components/Card";
 
-interface IItemData {
-  title: string;
-  image?: string;
-}
-
-const itemsData = {
-  organic: [
-    {
-      title: "Banana Waste",
-      image: "/images/banana.jpg",
-    },
-    {
-      title: "Apple Waste",
-      image: "/images/apple.jpg",
-    },
-    {
-      title: "Orange Waste",
-      image: "/images/orange.jpg",
-    },
-    {
-      title: "Strawberry Waste",
-      image: "/images/strawberry.jpg",
-    },
-    {
-      title: "Pineapple Waste",
-      image: "/images/pineapple.jpg",
-    },
-    {
-      title: "Watermelon Waste",
-      image: "/images/watermelon.jpg",
-    },
-  ],
-} as const;
-
 export default function Home() {
   const [search, setSearch] = useState("");
   const [parent] = useAutoAnimate();
-  const [selected, setSelected] = useAtom(selectedAtom);
-  const [selectedCategory, setSelectedCategory] = useState<
-    null | keyof typeof itemsData
-  >(null);
+
+  const [categories, setCategories] = useAtom(categoriesAtom);
+  const [items, setItems] = useAtom(itemsAtom);
 
   const getFilteredResults = useMemo(() => {
-    if (selectedCategory) {
-      return itemsData[selectedCategory].filter((i) =>
-        i.title.toLowerCase().includes(search.toLowerCase())
+    if (categories.selectedCategoryId) {
+      return items.items.filter((i) =>
+        i.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    return Object.keys(itemsData)
-      .filter((i) => i.toLowerCase().includes(search.toLowerCase()))
-      .map((i) => ({ title: `${i[0].toUpperCase()}${i.slice(1)}` }));
-  }, [search, selectedCategory]);
+    return categories.categories.filter((c) =>
+      c.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [
+    search,
+    items.items,
+    categories.selectedCategoryId,
+    categories.categories,
+  ]);
+
+  const getSelectedItem = useMemo(() => {
+    if (!items.selectedItemId) return null;
+    return items.items.find((c) => c.id === items.selectedItemId);
+  }, [items.items, items.selectedItemId]);
 
   return (
     <div className="flex flex-col gap-8 md:h-[80vh] md:max-h-[1000px] md:flex-row">
@@ -76,7 +52,7 @@ export default function Home() {
           <TbSearch className="ml-4 text-lg text-black/50" />
           <input
             placeholder={`Search ${
-              !selectedCategory ? "a category" : "an item"
+              !categories.selectedCategoryId ? "a category" : "an item"
             }...`}
             className="w-full rounded-t-lg bg-gray-100/70 px-4 py-3 text-black outline-none"
             onChange={(e) => setSearch(e.target.value)}
@@ -87,10 +63,15 @@ export default function Home() {
           ref={parent}
           className="keep-scrolling flex-grow overflow-y-auto rounded-b-lg"
         >
-          {selectedCategory && (
+          {categories.selectedCategoryId && (
             <li
               className="flex cursor-pointer items-center space-x-1 px-3 py-2 text-sm hover:bg-white/30"
-              onClick={() => setSelectedCategory(null)}
+              onClick={() =>
+                setCategories((p) => ({
+                  ...p,
+                  selectedCategoryId: null,
+                }))
+              }
             >
               <TbChevronLeft />
               <span>Back</span>
@@ -102,12 +83,12 @@ export default function Home() {
           )}
 
           {getFilteredResults.map((item, index) => (
-            <li key={item.title}>
+            <li key={item.name}>
               <Card
-                type={selectedCategory ? "item" : "category"}
-                title={item.title}
+                id={item.id}
+                type={categories.selectedCategoryId ? "item" : "category"}
+                name={item.name}
                 image={`https://picsum.photos/100/100?random=${index}`}
-                setSelectedCategory={setSelectedCategory}
               />
             </li>
           ))}
@@ -115,7 +96,7 @@ export default function Home() {
       </aside>
 
       <AnimatePresence>
-        {selected && (
+        {getSelectedItem?.id && (
           <motion.main
             initial={{
               opacity: 0,
@@ -143,29 +124,31 @@ export default function Home() {
               <TbX
                 size={24}
                 className="cursor-pointer rounded-full bg-red-600/10 p-1 text-red-600 transition-colors hover:bg-red-600 hover:text-white"
-                onClick={() => setSelected(null)}
+                onClick={() =>
+                  setItems((p) => ({ ...p, selectedItemId: null }))
+                }
               />
 
-              <h1 className="font-medium">{selected}</h1>
+              <h1 className="font-medium">{getSelectedItem.name}</h1>
             </header>
 
             <div className="flex flex-col gap-4 px-6 py-4">
               <section className="flex flex-col-reverse justify-between gap-4 md:flex-row">
                 <div className="flex flex-col space-y-8">
                   <p className="text-black/80">
-                    <span className="rounded-lg bg-black/10 px-3 py-1 font-medium">
-                      {selected}
+                    <span className="rounded-lg bg-black/10 px-3 py-1.5 align-middle font-medium">
+                      {getSelectedItem.name}
                     </span>{" "}
-                    takes{" "}
-                    <span className="inline-flex items-center rounded-lg bg-red-600/10 px-3 py-1 font-medium text-red-600">
+                    take(s){" "}
+                    <span className="inline-flex items-center rounded-lg bg-red-600/10 px-3 py-1 align-middle font-medium text-red-600">
                       <TbClock className="mr-1.5" />
-                      10 years
+                      {getSelectedItem.decomposeTime}
                     </span>{" "}
                     to decompose. We can protect our environment by throwing
                     them into{" "}
-                    <span className="inline-flex items-center rounded-lg bg-green-600/10 px-3 py-1 font-medium text-green-600">
+                    <span className="inline-flex items-center rounded-lg bg-green-600/10 px-3 py-1 align-middle font-medium text-green-600">
                       <TbRecycle className="mr-1.5" />
-                      organic waste
+                      {getSelectedItem.wasteType}
                     </span>{" "}
                     bins.
                   </p>
@@ -182,14 +165,16 @@ export default function Home() {
                   </div>
                 </div>
 
-                <Image
-                  src="https://picsum.photos/300/300?random=10"
-                  alt="Image"
-                  width={300}
-                  height={300}
-                  className="flex-shrink-0  rounded-lg ring-1 ring-black/10"
-                  draggable="false"
-                />
+                {getSelectedItem.image && (
+                  <Image
+                    src={getSelectedItem.image}
+                    alt="Image"
+                    width={300}
+                    height={300}
+                    className="flex-shrink-0  rounded-lg ring-1 ring-black/10"
+                    draggable="false"
+                  />
+                )}
               </section>
             </div>
           </motion.main>

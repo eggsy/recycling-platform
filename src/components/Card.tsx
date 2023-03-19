@@ -1,57 +1,54 @@
-import { selectedAtom } from "@/store/selected";
 import { useAtom } from "jotai";
 import { TbRecycle, TbClock } from "react-icons/tb";
 import Image from "next/image";
+import { itemsAtom } from "@/store/items";
+import { categoriesAtom } from "@/store/categories";
 
 interface ICardProps {
+  id: string;
   image: string;
-  title: string;
+  name: string;
   type?: "category" | "item";
-  setSelectedCategory?: any;
 }
 
-export const Card = ({
-  type = "item",
-  image,
-  title,
-  setSelectedCategory,
-}: ICardProps) => {
-  const [_, setSelected] = useAtom(selectedAtom);
+export const Card = ({ id, type = "item", image, name }: ICardProps) => {
+  const [_, setCategories] = useAtom(categoriesAtom);
+  const [__, setItems] = useAtom(itemsAtom);
 
   const handleClick = () => {
     if (type === "category") {
-      setSelectedCategory?.(title.toLowerCase());
+      setCategories((p) => ({ ...p, selectedCategoryId: id }));
     } else {
-      setSelected(title);
+      setItems((p) => ({ ...p, selectedItemId: id }));
     }
   };
 
   return (
     <div
-      className="flex items-center gap-1 transition-colors cursor-pointer select-none hover:bg-white/30"
+      className="flex cursor-pointer select-none items-center gap-1 transition-colors hover:bg-white/30"
       onClick={handleClick}
     >
-      <div className="p-3 rounded-lg">
+      <div className="rounded-lg p-3">
         <Image
           src={image}
           alt="Item image"
           width={75}
           height={75}
-          className="flex-shrink-0 object-cover rounded-lg"
+          className="flex-shrink-0 rounded-lg object-cover"
         />
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-xl font-medium">{title}</h1>
+        <h1 className="text-xl font-medium">{name}</h1>
 
         {type === "item" && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center px-2 py-1 text-xs text-red-600 rounded-lg w-max bg-red-600/10">
+            <span className="inline-flex w-max items-center rounded-lg bg-red-600/10 px-2 py-1 text-xs text-red-600">
               <TbClock className="mr-1" />
               12 year(s)
             </span>
 
-            <span className="inline-flex items-center px-2 py-1 text-xs text-green-600 rounded-lg w-max bg-green-600/10">
+            <span className="inline-flex w-max items-center rounded-lg bg-green-600/10 px-2 py-1 text-xs text-green-600">
               <TbRecycle className="mr-1" />3 benefit(s)
             </span>
           </div>
