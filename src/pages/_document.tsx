@@ -38,7 +38,7 @@ export default function Document() {
           href="/icons/512x512.png"
         />
 
-        <link rel="icon" type="image/png" href="/icons/192x192.png" />
+        <link rel="icon" type="image/png" href="/icons/favicon.png" />
         <link rel="manifest" href="/manifest.json" />
         <link
           rel="mask-icon"
@@ -60,7 +60,7 @@ export default function Document() {
         <meta property="og:image" content={`${url}/icons/512x512.png`} />
       </Head>
 
-      <body className="bg-[url('/background.png')] bg-cover bg-fixed bg-center">
+      <body className="overflow-x-hidden bg-[url('/background.png')] bg-cover bg-fixed bg-center">
         <Main />
         <NextScript />
       </body>
