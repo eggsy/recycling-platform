@@ -36,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const onAuthStateChanged = useCallback(
     (user: User | null) => {
-      if (user && !authCache.user) {
+      if (user && authCache.user?.uid !== user.uid) {
         setAuth({
           isAdmin: adminUids.includes(user.uid),
           user,
