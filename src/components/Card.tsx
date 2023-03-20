@@ -4,6 +4,8 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { firestore, storage } from "@/lib/firebase";
 import { deleteObject, ref } from "firebase/storage";
 import { toast } from "sonner";
+import { ReactNode } from "react";
+import clsx from "clsx";
 
 interface ICardProps {
   id: string;
@@ -99,24 +101,42 @@ export const Card = ({
       <div className="space-y-1">
         <h1 className="text-xl font-medium">{name}</h1>
 
-        {type === "item" && (
-          <div className="flex flex-wrap items-center gap-2">
+        {type === "item" && (decomposeTime || benefits) && (
+          <div className="flex flex-wrap items-center gap-1">
             {decomposeTime && (
-              <span className="inline-flex w-max items-center rounded-lg bg-red-600/10 px-2 py-1 text-xs text-red-600">
-                <TbClock className="mr-1" />
+              <Pill icon={<TbClock />} danger>
                 {decomposeTime}
-              </span>
+              </Pill>
             )}
 
             {Boolean(benefits?.length) && (
-              <span className="inline-flex w-max items-center rounded-lg bg-green-600/10 px-2 py-1 text-xs text-green-600">
-                <TbRecycle className="mr-1" />
-                {benefits?.length} benefit(s)
-              </span>
+              <Pill icon={<TbRecycle />}>{benefits?.length} benefit(s)</Pill>
             )}
           </div>
         )}
       </div>
     </div>
+  );
+};
+
+const Pill = ({
+  children,
+  icon,
+  danger,
+}: {
+  children: ReactNode;
+  icon: ReactNode;
+  danger?: boolean;
+}) => {
+  return (
+    <span
+      className={clsx(
+        "inline-flex w-max items-center space-x-1 rounded-lg  px-2 py-1 text-xs ",
+        danger ? "bg-red-600/10 text-red-600" : "bg-green-600/10 text-green-600"
+      )}
+    >
+      {icon}
+      <span>{children}</span>
+    </span>
   );
 };

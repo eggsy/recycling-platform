@@ -256,7 +256,7 @@ export default function Home() {
                           size={24}
                           className="rounded-full bg-red-600/20 p-1 text-red-600/70"
                         />
-                        <span className="-mt-[2px]">{result}</span>
+                        <span className="-mt-[2.5px]">{result}</span>
                       </li>
                     ))}
                   </ul>
@@ -277,7 +277,7 @@ export default function Home() {
                           size={24}
                           className="rounded-full bg-green-600/20 p-1 text-green-600"
                         />
-                        <span className="-mt-[2px]">{benefit}</span>
+                        <span className="-mt-[2.5px]">{benefit}</span>
                       </li>
                     ))}
                   </ul>
