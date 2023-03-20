@@ -101,6 +101,7 @@ export default function Admin() {
         <button
           className="flex items-center space-x-1 rounded-lg bg-green-600/20 px-4 py-1 text-sm font-medium text-green-600 transition-colors hover:bg-green-600/40 disabled:cursor-not-allowed disabled:bg-black/10 disabled:text-black/50"
           title="Save"
+          aria-label="Save button"
           disabled={loading || isDisabled}
           onClick={handleSave}
         >
@@ -191,6 +192,8 @@ const NotAuthorized = () => {
         <button
           type="button"
           className="flex items-center space-x-2 rounded-lg bg-white  px-4 py-2 text-sm text-black"
+          title="Go home"
+          aria-label="Go home button"
           onClick={() => router.replace("/")}
         >
           <TbHome />
@@ -200,6 +203,8 @@ const NotAuthorized = () => {
         <button
           type="button"
           className="flex items-center space-x-2 rounded-lg bg-white  px-4 py-2 text-sm text-black"
+          title="Sign in"
+          aria-label="Sign in button"
           onClick={() => signInPopup()}
         >
           <TbLogin />
@@ -242,6 +247,8 @@ const ChooseButton = ({
           ? "bg-green-600/20 text-green-600"
           : "bg-black/5 hover:bg-black/10"
       )}
+      title={title}
+      aria-label={`${title} button`}
       onClick={() => handleClick()}
     >
       {icon}

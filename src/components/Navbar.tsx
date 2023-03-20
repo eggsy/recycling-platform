@@ -70,13 +70,23 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
           )}
 
           {!isOpen && (
-            <button type="button" onClick={() => setOpen(true)}>
+            <button
+              type="button"
+              aria-label="Open menu button"
+              title="Open menu"
+              onClick={() => setOpen(true)}
+            >
               <TbMenu2 size={24} className="md:hidden" />
             </button>
           )}
 
           {isOpen && (
-            <button type="button" onClick={() => setOpen(false)}>
+            <button
+              type="button"
+              aria-label="Close menu button"
+              title="Close menu"
+              onClick={() => setOpen(false)}
+            >
               <TbX size={24} className="md:hidden" />
             </button>
           )}
@@ -148,6 +158,8 @@ const LoginButton = ({
       "mb-3 flex items-center justify-center space-x-2 md:mb-0 md:justify-start",
       className
     )}
+    title="Sign in"
+    aria-label="Sign in button"
     onClick={() => signInPopup()}
   >
     <span className="text-sm">Sign in</span>
