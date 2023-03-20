@@ -515,8 +515,8 @@ const ItemForm = ({
     setName(item.name);
     setDecompose(item.decomposeTime);
     setImage(item.image);
-    if (item.results) setResults(item.results);
-    if (item.benefits) setBenefits(item.benefits);
+    setResults(item.results || []);
+    setBenefits(item.benefits || []);
   }, [itemId, items, edit]);
 
   useEffect(() => {
@@ -580,9 +580,7 @@ const ItemForm = ({
               value={itemId}
               setValue={setItem}
               label="Item"
-              placeholder={
-                categoryId ? "Select an item..." : " Select a category first"
-              }
+              placeholder="Select an item..."
               options={items?.map((c) => ({
                 label: c.name,
                 value: c.id,
