@@ -53,7 +53,7 @@ export default function Document() {
       </Head>
 
       <body className="overflow-x-hidden">
-        <div className="fixed inset-0">
+        <div className="fixed inset-0 -z-10">
           <Image
             priority
             quality={100}
