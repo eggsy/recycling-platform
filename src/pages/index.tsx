@@ -250,13 +250,13 @@ export default function Home() {
                     {getSelectedItem.results?.map((result) => (
                       <li
                         key={result}
-                        className="not-prose flex items-center space-x-2 pl-0"
+                        className="not-prose flex space-x-2 pl-0"
                       >
                         <TbX
                           size={24}
                           className="rounded-full bg-red-600/20 p-1 text-red-600/70"
                         />
-                        <span>{result}</span>
+                        <span className="-mt-[2px]">{result}</span>
                       </li>
                     ))}
                   </ul>
@@ -271,13 +271,13 @@ export default function Home() {
                     {getSelectedItem.benefits?.map((benefit) => (
                       <li
                         key={benefit}
-                        className="not-prose flex items-center space-x-2 pl-0"
+                        className="not-prose flex space-x-2 pl-0"
                       >
                         <TbCheck
                           size={24}
                           className="rounded-full bg-green-600/20 p-1 text-green-600"
                         />
-                        <span>{benefit}</span>
+                        <span className="-mt-[2px]">{benefit}</span>
                       </li>
                     ))}
                   </ul>
