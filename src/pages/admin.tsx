@@ -5,53 +5,61 @@ import {
   TbLogin,
   TbHome,
   TbDeviceFloppy,
-  TbX,
 } from "react-icons/tb";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import clsx from "clsx";
 import { authAtom } from "@/store/auth";
 import { NextRouter, useRouter } from "next/router";
-import { signInPopup, storage, firestore } from "@/lib/firebase";
-import { FilePond } from "react-filepond";
-import type { ProcessServerConfigFunction } from "filepond";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import { signInPopup, firestore } from "@/lib/firebase";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { toast } from "sonner";
 
 // Styles
 import "filepond/dist/filepond.min.css";
 
 // Store
 import { categoriesAtom, ICategory } from "@/store/categories";
+import { itemsAtom, IItem } from "@/store/items";
 
 // Components
 import { Layout } from "@/components/Layout";
-import { addDoc, collection } from "firebase/firestore";
-import { toast } from "sonner";
+import { Select } from "@/components/Form/Select";
+import { FileInput } from "@/components/Form/FileInput";
+import { InputGroup } from "@/components/Form/InputGroup";
+import { Input } from "@/components/Form/Input";
+
+// Types
+type Category = {
+  image: string;
+  name: string;
+};
+
+type Item = {
+  name: string;
+  decomposeTime: string;
+  image: string;
+  categoryId: string;
+  results?: string[];
+  benefits?: string[];
+};
+
+type ExtendExisting<T, U> = Omit<T, keyof U> & U;
 
 interface IData {
-  category: {
-    image: string;
-    name: string;
-  };
-  item: {
-    name: string;
-    decomposeTime: string;
-    image: string;
-    categoryId: string;
-    results?: string[];
-    benefits?: string[];
-  };
+  category: Category;
+  item: Item;
+  editCategory: ExtendExisting<Category, { id: string }>;
+  editItem: ExtendExisting<Item, { id: string }>;
 }
 
 export default function Admin() {
-  const [categories] = useAtom(categoriesAtom);
-  const [which, setWhich] = useState<"category" | "item">("category");
+  const [categories, setCategories] = useAtom(categoriesAtom);
+  const [which, setWhich] = useState<
+    "category" | "item" | "editCategory" | "editItem"
+  >("category");
   const [authCache] = useAtom(authAtom);
+  const [items, setItems] = useAtom(itemsAtom);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<IData>({} as IData);
   const router = useRouter();
@@ -64,24 +72,34 @@ export default function Admin() {
   const isDisabled = useMemo(() => {
     if (!data[which]) return true;
 
-    if (which === "item")
+    if (which === "item" || which === "editItem")
       return !(
-        data.item.name &&
-        data.item.decomposeTime &&
-        data.item.image &&
-        data.item.categoryId
+        data[which].name &&
+        data[which].decomposeTime &&
+        data[which].image &&
+        data[which].categoryId &&
+        (which === "editItem" ? data[which].id : true)
       );
-    else return !(data.category.name && data.category.image);
+    else
+      return !(
+        data[which].name &&
+        data[which].image &&
+        (which === "editCategory" ? data[which].id : true)
+      );
   }, [data, which]);
 
   const handleSave = async () => {
     setLoading(true);
 
-    const path = which === "category" ? "categories" : "items";
+    const path = ["category", "editCategory"].includes(which)
+      ? "categories"
+      : "items";
+
     const dataObject: {
       name: string;
       image: string;
       decomposeTime?: string;
+      id?: string;
       categoryId?: string;
       results?: string[];
       benefits?: string[];
@@ -90,23 +108,69 @@ export default function Admin() {
       image: data[which].image,
     };
 
-    if (which === "item") {
+    if (which === "item" || which === "editItem") {
       dataObject["decomposeTime"] = data[which].decomposeTime;
       dataObject["categoryId"] = data[which].categoryId;
       dataObject["benefits"] = data[which].benefits;
       dataObject["results"] = data[which].results;
     }
 
-    const result = await addDoc(collection(firestore, path), dataObject).catch(
-      (err) => {
-        toast.error(err.message);
-        setLoading(false);
-      }
-    );
+    if (which === "category" || which === "item") {
+      await addDoc(collection(firestore, path), dataObject)
+        .then((doc) => {
+          toast.success(`Item/category added successfully!`);
 
-    if (result?.id) {
-      toast.success(`Item/category added successfully!`);
-      router.reload();
+          if (which === "category")
+            setCategories((p) => ({
+              ...p,
+              categories: [
+                ...p.categories,
+                { id: doc.id, ...dataObject } as ICategory,
+              ],
+            }));
+          else
+            setItems((p) => ({
+              ...p,
+              items: [...p.items, { id: doc.id, ...dataObject } as IItem],
+            }));
+        })
+        .catch((err) => {
+          toast.error(err.message);
+          setLoading(false);
+        });
+    } else if (which === "editCategory" || which === "editItem") {
+      await setDoc(doc(firestore, `${path}/${data[which].id}`), dataObject)
+        .then(() => {
+          if (which === "editCategory") {
+            const cat = categories.categories.map((category) => {
+              if (category.id === data[which].id)
+                return { id: data[which].id, ...dataObject } as ICategory;
+              else return category;
+            });
+
+            setCategories((p) => ({
+              ...p,
+              categories: cat,
+            }));
+          } else {
+            const item = items.items.map((item) => {
+              if (item.id === data[which].id)
+                return { id: data[which].id, ...dataObject } as IItem;
+              else return item;
+            });
+
+            setItems((p) => ({
+              ...p,
+              items: item,
+            }));
+          }
+
+          toast.success(`Item/category edited successfully!`);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+          setLoading(false);
+        });
     }
 
     setLoading(false);
@@ -118,13 +182,13 @@ export default function Admin() {
       rightSide={
         <button
           className="flex items-center space-x-1 rounded-lg bg-green-600/20 px-4 py-1 text-sm font-medium text-green-600 transition-colors hover:bg-green-600/40 disabled:cursor-not-allowed disabled:bg-black/10 disabled:text-black/50"
-          title="Save"
+          title={which.includes("edit") ? "Update" : "Save"}
           aria-label="Save button"
           disabled={loading || isDisabled}
           onClick={handleSave}
         >
           <TbDeviceFloppy />
-          <span>Save</span>
+          <span>{which.includes("edit") ? "Update" : "Save"}</span>
         </button>
       }
     >
@@ -144,26 +208,53 @@ export default function Admin() {
             }}
             className="space-y-8"
           >
-            <section className="space-y-2">
-              <h1 className="text-xs font-semibold uppercase">
-                I want to add a
-              </h1>
-              <div className="flex gap-4">
-                <ChooseButton
-                  which={which}
-                  title="Category"
-                  icon={<TbCategory size={20} />}
-                  setWhich={setWhich}
-                  router={router}
-                />
+            <section className="flex flex-col gap-x-10 gap-y-4 md:flex-row md:items-center">
+              <div className="flex flex-col gap-x-4 gap-y-2 md:flex-row md:items-center">
+                <span className="text-xs font-medium uppercase text-black/50">
+                  Add a:
+                </span>
 
-                <ChooseButton
-                  which={which}
-                  title="Item"
-                  icon={<TbSitemap size={20} />}
-                  setWhich={setWhich}
-                  router={router}
-                />
+                <div className="flex gap-4">
+                  <ChooseButton
+                    which={which}
+                    title="Category"
+                    icon={<TbCategory size={20} />}
+                    setWhich={setWhich}
+                    router={router}
+                  />
+
+                  <ChooseButton
+                    which={which}
+                    title="Item"
+                    icon={<TbSitemap size={20} />}
+                    setWhich={setWhich}
+                    router={router}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-x-4 gap-y-2 md:flex-row md:items-center">
+                <span className="text-xs font-medium uppercase text-black/50">
+                  Or:
+                </span>
+
+                <div className="flex gap-4">
+                  <ChooseButton
+                    which={which}
+                    title="Edit Category"
+                    icon={<TbCategory size={20} />}
+                    setWhich={setWhich}
+                    router={router}
+                  />
+
+                  <ChooseButton
+                    which={which}
+                    title="Edit Item"
+                    icon={<TbCategory size={20} />}
+                    setWhich={setWhich}
+                    router={router}
+                  />
+                </div>
               </div>
             </section>
 
@@ -176,6 +267,24 @@ export default function Admin() {
                   <ItemForm
                     categories={categories.categories}
                     setData={setData}
+                  />
+                )}
+
+                {which === "editCategory" && (
+                  <CategoryForm
+                    categories={categories.categories}
+                    setData={setData}
+                    edit
+                  />
+                )}
+
+                {which === "editItem" && (
+                  <ItemForm
+                    categories={categories.categories}
+                    items={items.items}
+                    setData={setData}
+                    setCategories={setCategories}
+                    edit
                   />
                 )}
               </AnimatePresence>
@@ -246,22 +355,32 @@ const ChooseButton = ({
   setWhich: any;
   icon: ReactNode;
 }) => {
+  const whichToSet = useMemo(
+    () =>
+      title
+        .toLowerCase()
+        .split(" ")
+        .map((i, index) => (index !== 0 ? i[0].toUpperCase() + i.slice(1) : i))
+        .join(""),
+    [title]
+  );
+
   const handleClick = () => {
     router.push("/admin", {
       query: {
-        which: title.toLowerCase(),
+        which: whichToSet,
       },
     });
 
-    setWhich(title.toLowerCase());
+    setWhich(whichToSet);
   };
 
   return (
     <button
       type="button"
       className={clsx(
-        "no-highlight flex items-center space-x-2 rounded-lg px-4 py-2 font-semibold transition-colors",
-        which === title.toLowerCase()
+        "no-highlight flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold outline-none transition-colors md:text-base",
+        which === whichToSet
           ? "bg-green-600/20 text-green-600"
           : "bg-black/5 hover:bg-black/10"
       )}
@@ -276,19 +395,44 @@ const ChooseButton = ({
 };
 
 /* Forms */
-const CategoryForm = ({ setData }: { setData: any }) => {
+const CategoryForm = ({
+  setData,
+  categories,
+  edit = false,
+}: {
+  setData: any;
+  categories?: ICategory[];
+  edit?: boolean;
+}) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
+  const [categoryId, setCategory] = useState("");
 
   useEffect(() => {
+    if (!edit) return;
+
+    const category = categories?.find((i) => i.id === categoryId);
+    if (!category) return;
+
+    setName(category.name);
+    setImage(category.image);
+  }, [categoryId, edit, categories]);
+
+  useEffect(() => {
+    const keyToSet = edit ? "editCategory" : "category";
+
+    const object: ExtendExisting<Category, { id?: string }> = {
+      name,
+      image,
+    };
+
+    if (edit) object.id = categoryId;
+
     setData((p: any) => ({
       ...p,
-      category: {
-        name,
-        image,
-      },
+      [keyToSet]: object,
     }));
-  }, [name, image, setData]);
+  }, [name, image, setData, edit, categoryId]);
 
   return (
     <motion.div
@@ -303,45 +447,107 @@ const CategoryForm = ({ setData }: { setData: any }) => {
       }}
       className="space-y-4 md:w-1/3"
     >
+      {edit && (
+        <Select
+          label="Category"
+          placeholder="Select a category"
+          value={categoryId}
+          setValue={setCategory}
+          options={categories?.map((i) => ({
+            label: i.name,
+            value: i.id,
+          }))}
+        />
+      )}
+
       <Input
-        label="Category Name"
+        label="Name"
         placeholder="Enter the category name"
         value={name}
         setValue={setName}
       />
 
-      <FileInput value={image} setValue={setImage} label="Category Image" />
+      <FileInput
+        value={image}
+        setValue={setImage}
+        label={`Image ${image && "(upload to change)"}`}
+      />
     </motion.div>
   );
 };
 
 const ItemForm = ({
-  categories,
   setData,
+  setCategories,
+  categories,
+  items,
+  edit = false,
 }: {
+  edit?: boolean;
+  setCategories?: any;
   categories: ICategory[];
+  items?: IItem[];
   setData: any;
 }) => {
   const [name, setName] = useState("");
   const [categoryId, setCategory] = useState("");
+  const [itemId, setItem] = useState("");
   const [decomposeTime, setDecompose] = useState("");
   const [image, setImage] = useState("");
-  const [results, setResults] = useState([]);
-  const [benefits, setBenefits] = useState([]);
+  const [results, setResults] = useState<string[]>([]);
+  const [benefits, setBenefits] = useState<string[]>([]);
 
   useEffect(() => {
+    if (!edit) return;
+
+    setCategories?.((p: any) => ({
+      ...p,
+      selectedCategoryId: categoryId,
+    }));
+  }, [categoryId, edit, setCategories]);
+
+  useEffect(() => {
+    if (!edit) return;
+    const item = items?.find((i) => i.id === itemId);
+
+    if (!item) return;
+
+    setName(item.name);
+    setDecompose(item.decomposeTime);
+    setImage(item.image);
+    if (item.results) setResults(item.results);
+    if (item.benefits) setBenefits(item.benefits);
+  }, [itemId, items, edit]);
+
+  useEffect(() => {
+    const keyToSet = edit ? "editItem" : "item";
+
+    const object: ExtendExisting<Item, { id?: string }> = {
+      name,
+      decomposeTime,
+      image,
+      categoryId,
+      results,
+      benefits,
+    };
+
+    if (edit) object.id = itemId;
+
     setData((p: any) => ({
       ...p,
-      item: {
-        name,
-        decomposeTime,
-        image,
-        categoryId,
-        results,
-        benefits,
-      },
+      [keyToSet]: object,
     }));
-  }, [name, categoryId, decomposeTime, image, results, benefits, setData]);
+  }, [
+    edit,
+    itemId,
+    name,
+    categoryId,
+    decomposeTime,
+    image,
+    results,
+    benefits,
+    setData,
+  ]);
 
   return (
     <motion.div
@@ -357,6 +563,34 @@ const ItemForm = ({
       className="grid gap-4 md:grid-cols-3"
     >
       <section className="space-y-4">
+        {edit && (
+          <>
+            <Select
+              value={categoryId}
+              setValue={setCategory}
+              label="Category"
+              placeholder="Select a category..."
+              options={categories.map((c) => ({
+                label: c.name,
+                value: c.id,
+              }))}
+            />
+
+            <Select
+              value={itemId}
+              setValue={setItem}
+              label="Item"
+              placeholder={
+                categoryId ? "Select an item..." : " Select a category first"
+              }
+              options={items?.map((c) => ({
+                label: c.name,
+                value: c.id,
+              }))}
+            />
+          </>
+        )}
+
         <Input
           label="Name"
           placeholder="Name"
@@ -371,18 +605,24 @@ const ItemForm = ({
           setValue={setDecompose}
         />
 
-        <FileInput value={image} setValue={setImage} label="Image" />
-
-        <Select
-          value={categoryId}
-          setValue={setCategory}
-          label="Category"
-          placeholder="Select a category..."
-          options={categories.map((c) => ({
-            label: c.name,
-            value: c.id,
-          }))}
+        <FileInput
+          value={image}
+          setValue={setImage}
+          label={`Image ${image && "(upload to change)"}`}
         />
+
+        {!edit && (
+          <Select
+            value={categoryId}
+            setValue={setCategory}
+            label="Category"
+            placeholder="Select a category..."
+            options={categories.map((c) => ({
+              label: c.name,
+              value: c.id,
+            }))}
+          />
+        )}
       </section>
 
       <InputGroup
@@ -399,222 +639,5 @@ const ItemForm = ({
         placeholder="(e.g. Save energy)"
       />
     </motion.div>
-  );
-};
-
-/* Elements */
-const Input = ({
-  label,
-  placeholder,
-  value,
-  setValue,
-  onKeyDown,
-  disabled,
-  grow,
-}: {
-  label?: string;
-  placeholder: string;
-  value: string;
-  setValue?: any;
-  disabled?: boolean;
-  grow?: boolean;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-}) => {
-  return (
-    <div className={clsx("flex flex-col space-y-1", grow && "flex-grow")}>
-      {label && (
-        <label className="text-xs font-semibold uppercase text-black/50">
-          {label}
-        </label>
-      )}
-
-      <input
-        type="text"
-        className="block w-full rounded-md border-black/30 text-sm outline-none transition-colors focus:border-black/50 focus:ring-0 disabled:cursor-not-allowed disabled:bg-white/50 disabled:text-black/50"
-        placeholder={placeholder}
-        value={value}
-        required
-        onChange={(e) => setValue?.(e.target.value)}
-        onKeyDown={onKeyDown}
-        disabled={disabled}
-      />
-    </div>
-  );
-};
-
-const InputGroup = ({
-  label,
-  placeholder,
-  value,
-  setValue,
-}: {
-  label: string;
-  placeholder: string;
-  value: string[];
-  setValue: any;
-}) => {
-  const [activeValue, setActive] = useState("");
-
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setValue([...value, activeValue]);
-      setActive("");
-    }
-  };
-
-  return (
-    <div className="flex flex-col">
-      <label className="mb-1 text-xs font-semibold uppercase text-black/50">
-        {label}
-      </label>
-
-      <div className="space-y-1">
-        {value.map((val, index) => (
-          <div key={val} className="flex items-center space-x-2">
-            <Input
-              key={val}
-              value={val}
-              placeholder={placeholder}
-              grow
-              disabled
-            />
-
-            <button
-              type="button"
-              title="Delete"
-              aria-label="Delete this item"
-              className="rounded-lg bg-red-600/20 p-1.5 text-2xl text-red-600 transition-colors hover:bg-red-600/40"
-              onClick={() => {
-                setValue(value.filter((_, i) => i !== index));
-              }}
-            >
-              <TbX />
-            </button>
-          </div>
-        ))}
-
-        <Input
-          value={activeValue}
-          setValue={setActive}
-          placeholder={placeholder}
-          onKeyDown={handleEnter}
-        />
-      </div>
-
-      <span className="mt-2 block text-center text-xs text-black/30">
-        press enter to add more
-      </span>
-    </div>
-  );
-};
-
-const Select = ({
-  setValue,
-  label,
-  placeholder,
-  options,
-}: {
-  value: string;
-  setValue: any;
-  label: string;
-  placeholder: string;
-  options: { label: string; value: string }[];
-}) => {
-  return (
-    <div className="flex flex-col space-y-1">
-      <label className="text-xs font-semibold uppercase text-black/50">
-        {label}
-      </label>
-
-      <select
-        className="block w-full rounded-md border-black/30 text-sm outline-none transition-colors focus:border-black/30 focus:ring-0"
-        required
-        title={placeholder}
-        defaultValue={placeholder}
-        onChange={(e) => setValue(e.target.value)}
-      >
-        <option disabled>{placeholder}</option>
-
-        {options.map((option) => (
-          <option key={option.label} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
-
-const FileInput = ({
-  label,
-  value,
-  setValue,
-}: {
-  label: string;
-  value: string;
-  setValue: any;
-}) => {
-  const uploadImage: ProcessServerConfigFunction = async (
-    fieldName,
-    file,
-    metadata,
-    load,
-    error,
-    progress
-  ) => {
-    const fileExtension = file.type.split("/")[1];
-    const storageRef = ref(storage, `image-${Date.now()}.${fileExtension}`);
-
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    const unsubscribe = uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        progress(true, snapshot.bytesTransferred, snapshot.totalBytes);
-      },
-      (err) => {
-        error(err.message);
-        toast.error(err.message);
-        unsubscribe();
-      },
-      async () => {
-        const downloadLink = await getDownloadURL(uploadTask.snapshot.ref);
-
-        setValue(downloadLink);
-        load(downloadLink);
-        unsubscribe();
-      }
-    );
-  };
-
-  const removeImage = async () => {
-    if (!value) return;
-    const storageRef = ref(storage, value);
-
-    await deleteObject(storageRef)
-      .then(() => setValue(""))
-      .catch((err) => {
-        toast.error(err.message);
-      });
-
-    setValue("");
-  };
-
-  return (
-    <div className="flex flex-col space-y-1">
-      <label className="text-xs font-semibold uppercase text-black/50">
-        {label}
-      </label>
-
-      <FilePond
-        onremovefile={() => removeImage()}
-        server={{
-          process: uploadImage.bind(this),
-          remove: () => removeImage(),
-        }}
-        acceptedFileTypes={["image/png"]}
-        credits={false}
-      />
-    </div>
   );
 };
