@@ -159,7 +159,7 @@ const LoginButton = ({
   <button
     type="button"
     className={clsx(
-      "mb-3 flex items-center justify-center space-x-2 md:mb-0 md:justify-start",
+      "mb-3 flex items-center justify-center space-x-2 font-medium md:mb-0 md:justify-start",
       className
     )}
     title="Sign in"
