@@ -279,7 +279,7 @@ const ItemForm = ({
   const [name, setName] = useState("");
   const [categoryId, setCategory] = useState("");
   const [decomposeTime, setDecompose] = useState("");
-  const [image, setImage] = useState({ name: "", link: "" });
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     setData((p: any) => ({
@@ -287,7 +287,7 @@ const ItemForm = ({
       item: {
         name,
         decomposeTime,
-        image: image.link,
+        image,
         categoryId,
       },
     }));
@@ -405,7 +405,7 @@ const FileInput = ({
   setValue,
 }: {
   label: string;
-  value: { name: string; link: string };
+  value: string;
   setValue: any;
 }) => {
   const uploadImage: ProcessServerConfigFunction = async (
@@ -421,32 +421,35 @@ const FileInput = ({
 
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
+    const unsubscribe = uploadTask.on(
       "state_changed",
       (snapshot) => {
         progress(true, snapshot.bytesTransferred, snapshot.totalBytes);
       },
       (err) => {
+        error(err.message);
         toast.error(err.message);
+        unsubscribe();
       },
       async () => {
         const ref = uploadTask.snapshot.ref;
         const downloadLink = await getDownloadURL(ref);
 
-        setValue({ name: ref.name, link: downloadLink });
+        setValue(downloadLink);
         load(ref.name);
+        unsubscribe();
       }
     );
   };
 
   const removeImage = async () => {
-    const storageRef = ref(storage, value.name);
+    const storageRef = ref(storage, value);
 
-    await deleteObject(storageRef).catch((err) => {
-      toast.error(err.message);
-    });
-
-    setValue("");
+    await deleteObject(storageRef)
+      .then(() => setValue(""))
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   return (
