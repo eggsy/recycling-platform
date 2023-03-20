@@ -200,7 +200,7 @@ const NavbarUser = ({
   >
     <div className="flex flex-row-reverse items-center gap-2 md:flex-row">
       {Boolean(score) && (
-        <span className="grid h-6 w-8 place-content-center rounded-full bg-green-600/20 text-sm text-green-600">
+        <span className="grid px-2 place-content-center rounded-full bg-green-600/20 text-sm text-green-600">
           {score}
         </span>
       )}
