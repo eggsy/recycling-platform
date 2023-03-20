@@ -49,6 +49,10 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
               height="60"
               className="rounded-lg md:rounded-none md:rounded-l-lg"
               draggable="false"
+              style={{
+                width: "150px",
+                height: "auto",
+              }}
             />
           </Link>
 

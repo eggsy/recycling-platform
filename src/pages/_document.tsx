@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import Image from "next/image";
 
 export default function Document() {
   const title = "Recycling App";
@@ -51,7 +52,16 @@ export default function Document() {
         <meta property="og:image" content={`${url}/icons/ios/512.png`} />
       </Head>
 
-      <body className="overflow-x-hidden bg-[url('/background.png')] bg-cover bg-fixed bg-center">
+      <body className="overflow-x-hidden">
+        <Image
+          priority
+          quality={100}
+          src="/background.png"
+          fill={true}
+          alt="Background image"
+          className="fixed inset-0 -z-20 object-cover"
+        />
+
         <Main />
         <NextScript />
       </body>
