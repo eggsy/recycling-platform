@@ -11,7 +11,7 @@
 }
 
 .filepond--wrapper .filepond--drop-label {
-  @apply rounded-lg border border-black/30 bg-white text-sm text-black/50 transition-colors hover:text-black/70 hover:border-black/40;
+  @apply rounded-lg border border-black/30 bg-white text-sm text-black/50 transition-colors hover:border-black/40 hover:text-black/70;
 }
 
 .keep-scrolling {
