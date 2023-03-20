@@ -7,6 +7,8 @@ export interface IItem {
   image: string;
   decomposeTime: string;
   wasteType: string;
+  benefits?: string[];
+  results?: string[];
 }
 
 export const itemsAtom = atom<{
