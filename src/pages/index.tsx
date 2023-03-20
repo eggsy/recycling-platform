@@ -120,7 +120,7 @@ export default function Home() {
                   <Card
                     id={item.id}
                     image={item.image}
-                    type={categories.selectedCategoryId ? "item" : "category"}
+                    type="item"
                     decomposeTime={item.decomposeTime}
                     name={item.name}
                   />
