@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import { toast } from "sonner";
 
 initializeApp({
@@ -19,7 +19,11 @@ const firestore = getFirestore();
 const googleProvider = new GoogleAuthProvider();
 const auth = getAuth();
 const storage = getStorage();
-const analytics = getAnalytics();
+
+let analytics = null;
+isSupported().then((supported) => {
+  if (supported) analytics = getAnalytics();
+});
 
 export const signInPopup = () =>
   signInWithPopup(auth, googleProvider)
