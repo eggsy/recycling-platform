@@ -41,7 +41,7 @@ export default function Post(props: any) {
   return (
     <Layout
       title={props.source.frontmatter.title}
-      mainClass="prose max-w-full prose-ol:font-medium prose-ol:text-brand marker:text-brand"
+      mainClass="prose prose-hr:border-black/10 prose-hr:border-dashed max-w-full prose-ol:font-medium prose-ol:text-brand marker:text-brand"
     >
       <MDXRemote {...props.source} components={{ PeopleCard }} />
     </Layout>
