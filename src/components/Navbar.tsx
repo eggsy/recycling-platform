@@ -146,7 +146,7 @@ const Links = ({
         <Link
           key={link.href}
           href={link.href}
-          className="select-none rounded-lg bg-black/5 md:bg-transparent md:hover:bg-transparent py-2 px-4 font-medium text-black/50 transition-colors hover:text-black"
+          className="select-none rounded-lg bg-black/5 py-2 px-4 font-medium text-black/50 transition-colors hover:text-black md:bg-transparent md:hover:bg-transparent"
         >
           {link.label}
         </Link>
@@ -200,7 +200,7 @@ const NavbarUser = ({
   >
     <div className="flex flex-row-reverse items-center gap-2 md:flex-row">
       {Boolean(score) && (
-        <span className="grid px-2 place-content-center rounded-full bg-green-600/20 text-sm text-green-600">
+        <span className="grid place-content-center rounded-full bg-green-600/20 px-2 text-sm text-green-600" title="Recycling score">
           {score}
         </span>
       )}
