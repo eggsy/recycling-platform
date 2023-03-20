@@ -41,7 +41,7 @@ export default function Post(props: any) {
   return (
     <Layout
       title={props.source.frontmatter.title}
-      mainClass="prose max-w-full marker:text-green-600"
+      mainClass="prose max-w-full marker:text-[#BF8D2C]"
     >
       <MDXRemote {...props.source} components={{ PeopleCard }} />
     </Layout>
