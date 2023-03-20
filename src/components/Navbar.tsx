@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { auth, signInPopup } from "@/lib/firebase";
 import { useAtom } from "jotai";
-import { authAtom, adminUids } from "@/store/auth";
+import { authAtom } from "@/store/auth";
 import { toast } from "sonner";
 
 const links = [
@@ -17,6 +17,10 @@ const links = [
   {
     label: "About",
     href: "/about",
+  },
+  {
+    label: "Scoreboard",
+    href: "/scoreboard",
   },
 ];
 
@@ -67,6 +71,7 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
             <LoginButton className="hidden md:flex" signInPopup={signInPopup} />
           ) : (
             <NavbarUser
+              score={authCache.userDb?.score}
               displayName={authCache.user.displayName}
               photoUrl={authCache.user.photoURL}
               handleLogout={handleLogout}
@@ -99,13 +104,14 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
 
       {isOpen && (
         <>
-          <Links isAdmin={adminUids.includes(authCache.user?.uid || "")} />
+          <Links isAdmin={authCache.isAdmin} />
 
           {!authCache.user ? (
             <LoginButton signInPopup={signInPopup} />
           ) : (
             <NavbarUser
               type="mobile"
+              score={authCache.userDb?.score}
               displayName={authCache.user.displayName}
               photoUrl={authCache.user.photoURL}
               handleLogout={handleLogout}
@@ -140,7 +146,7 @@ const Links = ({
         <Link
           key={link.href}
           href={link.href}
-          className="select-none rounded-lg bg-black/5 py-2 px-4 font-medium text-black/50 transition-colors hover:text-black"
+          className="select-none rounded-lg bg-black/5 md:bg-transparent md:hover:bg-transparent py-2 px-4 font-medium text-black/50 transition-colors hover:text-black"
         >
           {link.label}
         </Link>
@@ -173,12 +179,14 @@ const LoginButton = ({
 
 const NavbarUser = ({
   type = "desktop",
+  score,
   displayName,
   photoUrl,
   handleLogout,
 }: {
   type?: "desktop" | "mobile";
   displayName: string | null;
+  score?: number;
   photoUrl: string | null;
   handleLogout: any;
 }) => (
@@ -191,6 +199,12 @@ const NavbarUser = ({
     )}
   >
     <div className="flex flex-row-reverse items-center gap-2 md:flex-row">
+      {Boolean(score) && (
+        <span className="grid h-6 w-8 place-content-center rounded-full bg-green-600/20 text-sm text-green-600">
+          {score}
+        </span>
+      )}
+
       <span className="block font-medium">{displayName}</span>
 
       {photoUrl && (
