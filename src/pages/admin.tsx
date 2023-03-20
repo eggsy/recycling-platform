@@ -72,26 +72,37 @@ export default function Admin() {
   }, [data, which]);
 
   const handleSave = async () => {
-    if (which === "item") {
-      setLoading(true);
+    setLoading(true);
 
-      const result = await addDoc(collection(firestore, "items"), {
-        name: data.item.name,
-        decomposeTime: data.item.decomposeTime,
-        image: data.item.image,
-        categoryId: data.item.categoryId,
-      }).catch((err) => {
+    const path = which === "category" ? "categories" : "items";
+    const dataObject: {
+      name: string;
+      image: string;
+      decomposeTime?: string;
+      categoryId?: string;
+    } = {
+      name: data[which].name,
+      image: data[which].image,
+    };
+
+    if (which === "item") {
+      dataObject["decomposeTime"] = data[which].decomposeTime;
+      dataObject["categoryId"] = data[which].categoryId;
+    }
+
+    const result = await addDoc(collection(firestore, path), dataObject).catch(
+      (err) => {
         toast.error(err.message);
         setLoading(false);
-      });
-
-      if (result?.id) {
-        toast.success("Item added successfully!");
-        router.reload();
       }
+    );
 
-      setLoading(false);
+    if (result?.id) {
+      toast.success(`Item/category added successfully!`);
+      router.reload();
     }
+
+    setLoading(false);
   };
 
   return (
@@ -153,7 +164,7 @@ export default function Admin() {
               <h1 className="text-xs font-semibold uppercase">Details</h1>
 
               <AnimatePresence mode="wait" initial={false}>
-                {which === "category" && <CategoryForm />}
+                {which === "category" && <CategoryForm setData={setData} />}
                 {which === "item" && (
                   <ItemForm
                     categories={categories.categories}
@@ -258,7 +269,20 @@ const ChooseButton = ({
 };
 
 /* Forms */
-const CategoryForm = () => {
+const CategoryForm = ({ setData }: { setData: any }) => {
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    setData((p: any) => ({
+      ...p,
+      category: {
+        name,
+        image,
+      },
+    }));
+  }, [name, image, setData]);
+
   return (
     <motion.div
       initial={{
@@ -270,8 +294,16 @@ const CategoryForm = () => {
       exit={{
         opacity: 0,
       }}
+      className="space-y-4"
     >
-      Category Form
+      <Input
+        label="Category Name"
+        placeholder="Enter the category name"
+        value={name}
+        setValue={setName}
+      />
+
+      <FileInput value={image} setValue={setImage} label="Category Image" />
     </motion.div>
   );
 };
@@ -439,17 +471,17 @@ const FileInput = ({
         unsubscribe();
       },
       async () => {
-        const ref = uploadTask.snapshot.ref;
-        const downloadLink = await getDownloadURL(ref);
+        const downloadLink = await getDownloadURL(uploadTask.snapshot.ref);
 
         setValue(downloadLink);
-        load(ref.name);
+        load(downloadLink);
         unsubscribe();
       }
     );
   };
 
   const removeImage = async () => {
+    if (!value) return;
     const storageRef = ref(storage, value);
 
     await deleteObject(storageRef)
@@ -457,6 +489,8 @@ const FileInput = ({
       .catch((err) => {
         toast.error(err.message);
       });
+
+    setValue("");
   };
 
   return (
