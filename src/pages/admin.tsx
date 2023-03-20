@@ -626,17 +626,17 @@ const ItemForm = ({
       </section>
 
       <InputGroup
-        label="Results"
+        label="Environmental damage"
         value={results}
         setValue={setResults}
-        placeholder="(e.g. Increased waste and pollution)"
+        placeholder="(e.g. Water and air pollution.)"
       />
 
       <InputGroup
-        label="Benefits"
+        label="When recycled properly"
         value={benefits}
         setValue={setBenefits}
-        placeholder="(e.g. Save energy)"
+        placeholder="(e.g. Saves energy.)"
       />
     </motion.div>
   );
