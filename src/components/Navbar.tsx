@@ -140,7 +140,7 @@ const Links = ({
         <Link
           key={link.href}
           href={link.href}
-          className="rounded-lg bg-black/5 py-2 px-4 font-semibold text-black/50 transition-colors hover:text-black"
+          className="select-none rounded-lg bg-black/5 py-2 px-4 font-medium text-black/50 transition-colors hover:text-black"
         >
           {link.label}
         </Link>
