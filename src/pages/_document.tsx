@@ -4,7 +4,7 @@ export default function Document() {
   const title = "Recycling App";
   const description =
     "Wonder what happens if you don't recyle? Take a look at items on our database to see what impacts could be done if you recyle.";
-  const themeColor = "#145A32";
+  const themeColor = "#BF8D2C";
   const url = "https://recycling-app.netlify.app";
 
   return (

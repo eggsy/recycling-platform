@@ -6,8 +6,8 @@
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
-  "theme_color": "#145A32",
-  "background_color": "#145A32",
+  "theme_color": "#BF8D2C",
+  "background_color": "#BF8D2C",
   "icons": [
     {
       "src": "/icons/windows11/SmallTile.scale-100.png",
