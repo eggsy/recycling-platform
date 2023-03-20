@@ -10,7 +10,14 @@ import { getItems } from "@/lib/getItems";
 import { useCallback, useEffect, useState } from "react";
 import { auth, getCurrentUser, updateScore } from "@/lib/firebase";
 import { useRouter } from "next/router";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  type DragEndEvent,
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useSound } from "use-sound";
 import { TbCheck } from "react-icons/tb";
 import { User } from "firebase/auth";
@@ -45,6 +52,11 @@ export default function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
   const [score, setScore] = useState(authCache.userDb?.score || 0);
   const debouncedScore = useDebounce(score, 1500);
+
+  const mouseSensor = useSensor(MouseSensor);
+  const touchSensor = useSensor(TouchSensor);
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const [play] = useSound("/drop.mp3", {
     volume: 0.5,
@@ -150,7 +162,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <Navbar fontFamily={inter.className} />
 
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={pathname}
