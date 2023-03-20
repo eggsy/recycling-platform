@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { Montserrat } from "next/font/google";
 import Head from "next/head";
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 import clsx from "clsx";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,7 +9,7 @@ import { useAtom } from "jotai";
 import { getCategories } from "@/lib/getCategories";
 import { getItems } from "@/lib/getItems";
 import { useCallback, useEffect } from "react";
-import { auth } from "@/firebase/clientApp";
+import { auth } from "@/lib/firebase";
 import { useRouter } from "next/router";
 
 // Store

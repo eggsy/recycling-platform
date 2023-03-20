@@ -11,7 +11,7 @@ import { useAtom } from "jotai";
 import clsx from "clsx";
 import { authAtom } from "@/store/auth";
 import { NextRouter, useRouter } from "next/router";
-import { signInPopup, storage, firestore } from "@/firebase/clientApp";
+import { signInPopup, storage, firestore } from "@/lib/firebase";
 import { FilePond } from "react-filepond";
 import type { ProcessServerConfigFunction } from "filepond";
 import {

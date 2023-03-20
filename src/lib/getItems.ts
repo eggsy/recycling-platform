@@ -1,4 +1,4 @@
-import { firestore } from "@/firebase/clientApp";
+import { firestore } from "@/lib/firebase";
 import { IItem } from "@/store/items";
 import { collection, query, getDocs, where } from "firebase/firestore";
 

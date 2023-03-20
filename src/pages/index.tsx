@@ -12,7 +12,7 @@ import { useAtom } from "jotai";
 import { motion, AnimatePresence } from "framer-motion";
 import { deleteDoc, doc } from "firebase/firestore";
 import { toast } from "sonner";
-import { firestore, storage } from "@/firebase/clientApp";
+import { firestore, storage } from "@/lib/firebase";
 
 // Store
 import { categoriesAtom } from "@/store/categories";
