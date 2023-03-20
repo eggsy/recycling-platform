@@ -263,7 +263,7 @@ export default function Home() {
                 </>
               )}
 
-              {Boolean(getSelectedItem.results?.length) && (
+              {Boolean(getSelectedItem.benefits?.length) && (
                 <>
                   <h3>When recycled properly</h3>
 
