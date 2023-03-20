@@ -43,7 +43,6 @@ export default function Home() {
   }, [router.query]);
 
   useEffect(() => {
-    console.log(categories);
     if (categories.selectedCategoryId && search) setSearch("");
   }, [categories, search, categories.selectedCategoryId]);
 
