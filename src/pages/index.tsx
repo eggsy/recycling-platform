@@ -92,13 +92,13 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-8 md:h-[80vh] md:max-h-[1000px] md:flex-row">
       <aside className="flex max-h-[30vh] flex-shrink-0 flex-col rounded-lg bg-gray-100/70 ring-1 ring-black/10 backdrop-blur-md md:max-h-full md:w-3/12">
-        <div className="flex items-center rounded-t-lg border-b border-black/10 bg-gray-100/70 backdrop-blur-md">
+        <div className="flex items-center rounded-t-lg border-b border-black/10 bg-white/70 backdrop-blur-md">
           <TbSearch className="ml-4 text-lg text-black/50" />
           <input
             placeholder={`Search ${
               !categories.selectedCategoryId ? "a category" : "an item"
             }...`}
-            className="w-full rounded-t-lg bg-gray-100/70 px-4 py-3 text-black outline-none"
+            className="w-full rounded-t-lg bg-white/70 px-4 py-3.5 text-black outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
