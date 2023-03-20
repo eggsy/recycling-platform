@@ -219,7 +219,10 @@ export default function Home() {
 
             <section className="prose max-w-full px-6 py-4 prose-h3:text-sm prose-h3:uppercase prose-ul:pl-0">
               {getSelectedItem.image && (
-                <DraggableImage image={getSelectedItem.image} />
+                <DraggableImage
+                  title={getSelectedItem.name}
+                  image={getSelectedItem.image}
+                />
               )}
 
               <p className="mt-0">

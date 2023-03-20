@@ -1,9 +1,18 @@
 import { useDraggable } from "@dnd-kit/core";
 import Image from "next/image";
 
-export const DraggableImage = ({ image }: { image: string }) => {
+export const DraggableImage = ({
+  title,
+  image,
+}: {
+  title: string;
+  image: string;
+}) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: "draggable",
+    data: {
+      item: title,
+    },
   });
 
   const style = transform
@@ -13,23 +22,21 @@ export const DraggableImage = ({ image }: { image: string }) => {
     : undefined;
 
   return (
-    <div>
-      <Image
-        ref={setNodeRef}
-        src={image}
-        alt="Image"
-        width={250}
-        height={250}
-        className="my:mb-0 my-0 mb-6 flex-shrink-0 rounded-lg object-cover ring-1 ring-black/10 md:float-right"
-        draggable="false"
-        style={{
-          height: 250,
-          width: 250,
-          ...style,
-        }}
-        {...listeners}
-        {...attributes}
-      />
-    </div>
+    <Image
+      ref={setNodeRef}
+      src={image}
+      alt="Image"
+      width={250}
+      height={250}
+      className="my:mb-0 my-0 mb-6 flex-shrink-0 rounded-lg object-cover ring-1 ring-black/10 md:float-right"
+      draggable="false"
+      style={{
+        height: 250,
+        width: 250,
+        ...style,
+      }}
+      {...listeners}
+      {...attributes}
+    />
   );
 };

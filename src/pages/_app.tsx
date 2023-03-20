@@ -21,6 +21,7 @@ import {
 import { useSound } from "use-sound";
 import { TbCheck } from "react-icons/tb";
 import { User } from "firebase/auth";
+import { getScores } from "@/lib/getScores";
 
 // Store
 import { categoriesAtom } from "@/store/categories";
@@ -36,8 +37,7 @@ import "@/styles/tailwind.css";
 
 // Components
 import { Navbar } from "@/components/Navbar";
-import { DroppableWoman } from "@/components/DroppableWoman";
-import { getScores } from "@/lib/getScores";
+import { RecycleBox } from "@/components/RecycleBox";
 
 const inter = Montserrat({
   subsets: ["latin"],
@@ -51,6 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const { pathname } = useRouter();
   const [score, setScore] = useState(authCache.userDb?.score || 0);
+  const [isActive, setActive] = useState(false);
   const debouncedScore = useDebounce(score, 1500);
 
   const mouseSensor = useSensor(MouseSensor);
@@ -138,15 +139,22 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [authCache.userDb?.score, debouncedScore, setAuth]);
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { over } = event;
+    const { over, active } = event;
+    setActive(false);
 
-    if (over?.id === "woman") {
+    if (over?.id === "recycle-box") {
       setScore((p) => p + 1);
 
       play();
-      toast.success("You just recycled an item! 🎉", {
-        icon: <TbCheck className="text-lg text-green-600" />,
-      });
+
+      toast.success(
+        `You just recycled ${active.data.current?.item}! 🎉 ${
+          !authCache.user ? "Log in to save your progress." : ""
+        }`,
+        {
+          icon: <TbCheck className="text-lg text-green-600" />,
+        }
+      );
     }
   };
 
@@ -162,7 +170,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <Navbar fontFamily={inter.className} />
 
-      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+      <DndContext
+        onDragEnd={handleDragEnd}
+        sensors={sensors}
+        onDragStart={() => {
+          setActive(true);
+        }}
+      >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={pathname}
@@ -187,7 +201,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </motion.div>
         </AnimatePresence>
 
-        <DroppableWoman />
+        <RecycleBox active={isActive} />
       </DndContext>
 
       <Toaster position="bottom-left" />
