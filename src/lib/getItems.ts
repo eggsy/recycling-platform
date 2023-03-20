@@ -5,13 +5,13 @@ import { collection, query, getDocs, where, orderBy } from "firebase/firestore";
 const itemsCollection = collection(firestore, "items");
 
 export const getItems = async (id: string) => {
-  const todosQuery = query(
+  const itemsQuery = query(
     itemsCollection,
     orderBy("name", "asc"),
     where("categoryId", "==", id)
   );
 
-  const querySnapshot = await getDocs(todosQuery);
+  const querySnapshot = await getDocs(itemsQuery);
 
   const results: IItem[] = [];
 

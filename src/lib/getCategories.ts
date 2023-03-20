@@ -5,8 +5,8 @@ import { collection, query, getDocs, orderBy } from "firebase/firestore";
 const categoriesCollection = collection(firestore, "categories");
 
 export const getCategories = async () => {
-  const todosQuery = query(categoriesCollection, orderBy("name", "asc"));
-  const querySnapshot = await getDocs(todosQuery);
+  const categoriesQuery = query(categoriesCollection, orderBy("name", "asc"));
+  const querySnapshot = await getDocs(categoriesQuery);
 
   const results: ICategory[] = [];
 
