@@ -35,7 +35,7 @@ export const Card = ({
       className="flex cursor-pointer select-none items-center gap-1 transition-colors hover:bg-white/30"
       onClick={handleClick}
     >
-      <div className="rounded-lg p-3">
+      <div className="flex-shrink-0 rounded-lg p-3">
         <Image
           src={image}
           alt="Item image"
@@ -45,7 +45,7 @@ export const Card = ({
             width: 75,
             height: 75,
           }}
-          className="flex-shrink-0 rounded-lg object-cover"
+          className="rounded-lg object-cover"
         />
       </div>
 
