@@ -53,14 +53,16 @@ export default function Document() {
       </Head>
 
       <body className="overflow-x-hidden">
-        <Image
-          priority
-          quality={100}
-          src="/background.png"
-          fill={true}
-          alt="Background image"
-          className="fixed inset-0 -z-20 object-cover"
-        />
+        <div className="fixed inset-0">
+          <Image
+            priority
+            quality={100}
+            fill={true}
+            src="/background.png"
+            alt="Background image"
+            className="object-cover"
+          />
+        </div>
 
         <Main />
         <NextScript />
