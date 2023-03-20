@@ -1,11 +1,15 @@
 import { firestore } from "@/lib/firebase";
 import { IItem } from "@/store/items";
-import { collection, query, getDocs, where } from "firebase/firestore";
+import { collection, query, getDocs, where, orderBy } from "firebase/firestore";
 
 const itemsCollection = collection(firestore, "items");
 
 export const getItems = async (id: string) => {
-  const todosQuery = query(itemsCollection, where("categoryId", "==", id));
+  const todosQuery = query(
+    itemsCollection,
+    orderBy("name", "asc"),
+    where("categoryId", "==", id)
+  );
 
   const querySnapshot = await getDocs(todosQuery);
 
