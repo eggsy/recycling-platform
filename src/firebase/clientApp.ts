@@ -39,4 +39,4 @@ export const signInPopup = () =>
       console.error(errorCode, errorMessage, email, credential);
     });
 
-export { firestore, auth, googleProvider, storage, analytics };
+export { firestore, auth, storage, analytics };
