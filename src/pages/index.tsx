@@ -194,7 +194,7 @@ export default function Home() {
             </header>
 
             <div className="flex flex-col gap-4 px-6 py-4">
-              <section className="flex flex-col-reverse flex-wrap justify-between gap-4 md:flex-row">
+              <section className="flex flex-col-reverse flex-wrap justify-between gap-4 md:flex-row md:flex-nowrap">
                 <div className="flex flex-col space-y-8">
                   <p className="text-black/80">
                     <span className="rounded-lg bg-black/10 px-3 py-1.5 align-middle text-sm font-medium">
