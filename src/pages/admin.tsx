@@ -5,6 +5,7 @@ import {
   TbLogin,
   TbHome,
   TbDeviceFloppy,
+  TbX,
 } from "react-icons/tb";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
@@ -42,6 +43,8 @@ interface IData {
     decomposeTime: string;
     image: string;
     categoryId: string;
+    results?: string[];
+    benefits?: string[];
   };
 }
 
@@ -80,6 +83,8 @@ export default function Admin() {
       image: string;
       decomposeTime?: string;
       categoryId?: string;
+      results?: string[];
+      benefits?: string[];
     } = {
       name: data[which].name,
       image: data[which].image,
@@ -88,6 +93,8 @@ export default function Admin() {
     if (which === "item") {
       dataObject["decomposeTime"] = data[which].decomposeTime;
       dataObject["categoryId"] = data[which].categoryId;
+      dataObject["benefits"] = data[which].benefits;
+      dataObject["results"] = data[which].results;
     }
 
     const result = await addDoc(collection(firestore, path), dataObject).catch(
@@ -160,7 +167,7 @@ export default function Admin() {
               </div>
             </section>
 
-            <section className="space-y-2 md:w-1/3">
+            <section className="space-y-2">
               <h1 className="text-xs font-semibold uppercase">Details</h1>
 
               <AnimatePresence mode="wait" initial={false}>
@@ -294,7 +301,7 @@ const CategoryForm = ({ setData }: { setData: any }) => {
       exit={{
         opacity: 0,
       }}
-      className="space-y-4"
+      className="space-y-4 md:w-1/3"
     >
       <Input
         label="Category Name"
@@ -319,6 +326,8 @@ const ItemForm = ({
   const [categoryId, setCategory] = useState("");
   const [decomposeTime, setDecompose] = useState("");
   const [image, setImage] = useState("");
+  const [results, setResults] = useState([]);
+  const [benefits, setBenefits] = useState([]);
 
   useEffect(() => {
     setData((p: any) => ({
@@ -328,9 +337,11 @@ const ItemForm = ({
         decomposeTime,
         image,
         categoryId,
+        results,
+        benefits,
       },
     }));
-  }, [name, categoryId, decomposeTime, image, setData]);
+  }, [name, categoryId, decomposeTime, image, results, benefits, setData]);
 
   return (
     <motion.div
@@ -343,28 +354,49 @@ const ItemForm = ({
       exit={{
         opacity: 0,
       }}
-      className="space-y-4"
+      className="grid gap-4 md:grid-cols-3"
     >
-      <Input label="Name" placeholder="Name" value={name} setValue={setName} />
+      <section className="space-y-4">
+        <Input
+          label="Name"
+          placeholder="Name"
+          value={name}
+          setValue={setName}
+        />
 
-      <Input
-        label="Decompose Time"
-        placeholder="(e.g. 2 years)"
-        value={decomposeTime}
-        setValue={setDecompose}
+        <Input
+          label="Decompose Time"
+          placeholder="(e.g. 2 years)"
+          value={decomposeTime}
+          setValue={setDecompose}
+        />
+
+        <FileInput value={image} setValue={setImage} label="Image" />
+
+        <Select
+          value={categoryId}
+          setValue={setCategory}
+          label="Category"
+          placeholder="Select a category..."
+          options={categories.map((c) => ({
+            label: c.name,
+            value: c.id,
+          }))}
+        />
+      </section>
+
+      <InputGroup
+        label="Results"
+        value={results}
+        setValue={setResults}
+        placeholder="(e.g. Increased waste and pollution)"
       />
 
-      <FileInput value={image} setValue={setImage} label="Image" />
-
-      <Select
-        value={categoryId}
-        setValue={setCategory}
-        label="Category"
-        placeholder="Select a category..."
-        options={categories.map((c) => ({
-          label: c.name,
-          value: c.id,
-        }))}
+      <InputGroup
+        label="Benefits"
+        value={benefits}
+        setValue={setBenefits}
+        placeholder="(e.g. Save energy)"
       />
     </motion.div>
   );
@@ -376,32 +408,107 @@ const Input = ({
   placeholder,
   value,
   setValue,
+  onKeyDown,
+  disabled,
+  grow,
 }: {
-  label: string;
+  label?: string;
   placeholder: string;
   value: string;
-  setValue: any;
+  setValue?: any;
+  disabled?: boolean;
+  grow?: boolean;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }) => {
   return (
-    <div className="flex flex-col space-y-1">
-      <label className="text-xs font-semibold uppercase text-black/50">
-        {label}
-      </label>
+    <div className={clsx("flex flex-col space-y-1", grow && "flex-grow")}>
+      {label && (
+        <label className="text-xs font-semibold uppercase text-black/50">
+          {label}
+        </label>
+      )}
 
       <input
         type="text"
-        className="block w-full rounded-md border-black/30 text-sm outline-none transition-colors focus:border-black/50 focus:ring-0"
+        className="block w-full rounded-md border-black/30 text-sm outline-none transition-colors focus:border-black/50 focus:ring-0 disabled:cursor-not-allowed disabled:bg-white/50 disabled:text-black/50"
         placeholder={placeholder}
         value={value}
         required
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => setValue?.(e.target.value)}
+        onKeyDown={onKeyDown}
+        disabled={disabled}
       />
     </div>
   );
 };
 
-const Select = ({
+const InputGroup = ({
+  label,
+  placeholder,
   value,
+  setValue,
+}: {
+  label: string;
+  placeholder: string;
+  value: string[];
+  setValue: any;
+}) => {
+  const [activeValue, setActive] = useState("");
+
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setValue([...value, activeValue]);
+      setActive("");
+    }
+  };
+
+  return (
+    <div className="flex flex-col">
+      <label className="mb-1 text-xs font-semibold uppercase text-black/50">
+        {label}
+      </label>
+
+      <div className="space-y-1">
+        {value.map((val, index) => (
+          <div key={val} className="flex items-center space-x-2">
+            <Input
+              key={val}
+              value={val}
+              placeholder={placeholder}
+              grow
+              disabled
+            />
+
+            <button
+              type="button"
+              title="Delete"
+              aria-label="Delete this item"
+              className="rounded-lg bg-red-600/20 p-1.5 text-2xl text-red-600 transition-colors hover:bg-red-600/40"
+              onClick={() => {
+                setValue(value.filter((_, i) => i !== index));
+              }}
+            >
+              <TbX />
+            </button>
+          </div>
+        ))}
+
+        <Input
+          value={activeValue}
+          setValue={setActive}
+          placeholder={placeholder}
+          onKeyDown={handleEnter}
+        />
+      </div>
+
+      <span className="mt-2 block text-center text-xs text-black/30">
+        press enter to add more
+      </span>
+    </div>
+  );
+};
+
+const Select = ({
   setValue,
   label,
   placeholder,
