@@ -5,7 +5,7 @@ import {
   TbClock,
   TbChevronLeft,
 } from "react-icons/tb";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
 import { useAtom } from "jotai";
@@ -13,6 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { deleteDoc, doc } from "firebase/firestore";
 import { toast } from "sonner";
 import { firestore, storage } from "@/lib/firebase";
+import { deleteObject, ref } from "firebase/storage";
+import { useRouter } from "next/router";
 
 // Store
 import { categoriesAtom } from "@/store/categories";
@@ -21,15 +23,29 @@ import { authAtom } from "@/store/auth";
 
 // Components
 import { Card } from "@/components/Card";
-import { deleteObject, ref } from "firebase/storage";
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [parent] = useAutoAnimate();
+  const router = useRouter();
 
   const [categories, setCategories] = useAtom(categoriesAtom);
   const [items, setItems] = useAtom(itemsAtom);
   const [authCache] = useAtom(authAtom);
+
+  useEffect(() => {
+    const search = (router.query.q ||
+      router.query.s ||
+      router.query.search ||
+      router.query.query) as string;
+
+    if (search) setSearch(search);
+  }, [router.query]);
+
+  useEffect(() => {
+    console.log(categories);
+    if (categories.selectedCategoryId && search) setSearch("");
+  }, [categories, search, categories.selectedCategoryId]);
 
   const getFilteredItems = useMemo(() => {
     return items.items.filter((i) =>
@@ -82,6 +98,7 @@ export default function Home() {
               !categories.selectedCategoryId ? "a category" : "an item"
             }...`}
             className="w-full rounded-t-lg bg-gray-100/70 px-4 py-3 text-black outline-none"
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
