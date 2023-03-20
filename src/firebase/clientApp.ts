@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAnalytics } from "firebase/analytics";
 import { toast } from "sonner";
 
 initializeApp({
@@ -18,6 +19,7 @@ const firestore = getFirestore();
 const googleProvider = new GoogleAuthProvider();
 const auth = getAuth();
 const storage = getStorage();
+const analytics = getAnalytics();
 
 export const signInPopup = () =>
   signInWithPopup(auth, googleProvider)
@@ -33,4 +35,4 @@ export const signInPopup = () =>
       console.error(errorCode, errorMessage, email, credential);
     });
 
-export { firestore, auth, googleProvider, storage };
+export { firestore, auth, googleProvider, storage, analytics };
