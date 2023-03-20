@@ -12,6 +12,12 @@ export default function Scoreboard() {
 
   return (
     <Layout title="Scoreboard" mainClass="grid md:grid-cols-3 gap-4">
+      {scores.length === 0 && (
+        <span className="block text-black/50 md:col-span-3">
+          No one has found out about the game yet!
+        </span>
+      )}
+
       {scores.map((score) => (
         <ScoreCard key={score.displayName} {...score} />
       ))}
