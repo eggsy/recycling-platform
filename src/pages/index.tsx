@@ -4,8 +4,9 @@ import {
   TbRecycle,
   TbClock,
   TbChevronLeft,
+  TbCheck,
 } from "react-icons/tb";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Image from "next/image";
 import { useAtom } from "jotai";
@@ -15,6 +16,7 @@ import { toast } from "sonner";
 import { firestore, storage } from "@/lib/firebase";
 import { deleteObject, ref } from "firebase/storage";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 
 // Store
 import { categoriesAtom } from "@/store/categories";
@@ -23,6 +25,7 @@ import { authAtom } from "@/store/auth";
 
 // Components
 import { Card } from "@/components/Card";
+import { DraggableImage } from "@/components/DraggableImage";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -71,20 +74,19 @@ export default function Home() {
       return;
     }
 
-    await deleteObject(ref(storage, getSelectedItem?.image)).catch((err) => {
+    try {
+      await deleteDoc(doc(firestore, `items/${itemId}`));
+      await deleteObject(ref(storage, getSelectedItem?.image));
+
+      setItems((p) => ({
+        ...p,
+        items: p.items.filter((i) => i.id !== itemId),
+      }));
+
+      toast.success("Item deleted successfully.");
+    } catch (err: any) {
       toast.error(err.message);
-    });
-
-    await deleteDoc(doc(firestore, `items/${itemId}`)).catch((err) => {
-      toast.error(err.message);
-    });
-
-    setItems((p) => ({
-      ...p,
-      items: p.items.filter((i) => i.id !== itemId),
-    }));
-
-    toast.success("Item deleted successfully.");
+    }
   };
 
   return (
@@ -138,7 +140,10 @@ export default function Home() {
                     image={item.image}
                     type="item"
                     decomposeTime={item.decomposeTime}
+                    benefits={item.benefits}
                     name={item.name}
+                    setItems={setItems}
+                    setCategories={setCategories}
                   />
                 </li>
               ))
@@ -148,7 +153,10 @@ export default function Home() {
                     id={category.id}
                     image={category.image}
                     type="category"
+                    isAdmin={authCache.isAdmin}
                     name={category.name}
+                    setItems={setItems}
+                    setCategories={setCategories}
                   />
                 </li>
               ))}
@@ -209,56 +217,96 @@ export default function Home() {
               )}
             </header>
 
-            <div className="flex flex-col gap-4 px-6 py-4">
-              <section className="flex flex-col-reverse flex-wrap justify-between gap-4 md:flex-row md:flex-nowrap">
-                <div className="flex flex-col space-y-8">
-                  <p className="text-black/80">
-                    <span className="rounded-lg bg-black/10 px-3 py-1.5 align-middle text-sm font-medium">
-                      {getSelectedItem.name}
-                    </span>{" "}
-                    take(s){" "}
-                    <span className="inline-flex items-center rounded-lg bg-red-600/10 px-3 py-1 align-middle text-sm font-medium text-red-600">
-                      <TbClock className="mr-1.5" />
-                      {getSelectedItem.decomposeTime}
-                    </span>{" "}
-                    to decompose. We can protect our environment by throwing
-                    them into{" "}
-                    <span className="inline-flex items-center rounded-lg bg-green-600/10 px-3 py-1 align-middle text-sm font-medium text-green-600">
-                      <TbRecycle className="mr-1.5" />
-                      {categories.categories
-                        .find((i) => i.id === getSelectedItem.categoryId)
-                        ?.name.toLowerCase()}
-                    </span>{" "}
-                    bins.
-                  </p>
+            <section className="prose max-w-full px-6 py-4 prose-h3:text-sm prose-h3:uppercase prose-ul:pl-0">
+              {getSelectedItem.image && (
+                <DraggableImage image={getSelectedItem.image} />
+              )}
 
-                  <div className="flex flex-col space-y-3">
-                    <h3 className="w-max border-b border-black/10 text-sm font-semibold uppercase">
-                      How does it affect the environment
-                    </h3>
+              <p className="mt-0">
+                <Pill>{getSelectedItem.name}</Pill>take(s){" "}
+                <Pill variant="red">
+                  <TbClock className="mr-1.5" />
+                  {getSelectedItem.decomposeTime}
+                </Pill>
+                to decompose. We can protect our environment by throwing them
+                into{" "}
+                <Pill variant="green">
+                  <TbRecycle className="mr-1.5" />
+                  {categories.categories
+                    .find((i) => i.id === getSelectedItem.categoryId)
+                    ?.name.toLowerCase()}
+                </Pill>
+                bin(s).
+              </p>
 
-                    <ul className="list-disc pl-4">
-                      <li>very bad</li>
-                      <li>cok kötü</li>
-                    </ul>
-                  </div>
-                </div>
+              {Boolean(getSelectedItem.results?.length) && (
+                <>
+                  <h3>Environmental damage</h3>
 
-                {getSelectedItem.image && (
-                  <Image
-                    src={getSelectedItem.image}
-                    alt="Image"
-                    width={300}
-                    height={300}
-                    className="flex-shrink-0  rounded-lg ring-1 ring-black/10"
-                    draggable="false"
-                  />
-                )}
-              </section>
-            </div>
+                  <ul>
+                    {getSelectedItem.results?.map((result) => (
+                      <li
+                        key={result}
+                        className="not-prose flex items-center space-x-2 pl-0"
+                      >
+                        <TbX
+                          size={24}
+                          className="rounded-full bg-red-600/20 p-1 text-red-600/70"
+                        />
+                        <span>{result}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {Boolean(getSelectedItem.results?.length) && (
+                <>
+                  <h3>When recycled properly</h3>
+
+                  <ul>
+                    {getSelectedItem.benefits?.map((benefit) => (
+                      <li
+                        key={benefit}
+                        className="not-prose flex items-center space-x-2 pl-0"
+                      >
+                        <TbCheck
+                          size={24}
+                          className="rounded-full bg-green-600/20 p-1 text-green-600"
+                        />
+                        <span>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
           </motion.main>
         )}
       </AnimatePresence>
     </div>
   );
 }
+
+const Pill = ({
+  variant = "black",
+  children,
+}: {
+  variant?: "black" | "red" | "green";
+  children: ReactNode;
+}) => {
+  return (
+    <span
+      className={clsx(
+        "mr-1 inline-flex items-center rounded-lg px-2 py-1 align-middle text-sm font-medium",
+        {
+          "bg-red-600/10 text-red-600": variant === "red",
+          "bg-green-600/10 text-green-600": variant === "green",
+          "bg-black/10 text-black": variant === "black",
+        }
+      )}
+    >
+      {children}
+    </span>
+  );
+};
