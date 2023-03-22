@@ -62,7 +62,7 @@ export default function Home() {
             placeholder={`Search ${
               !categories.selectedCategoryId ? "a category" : "an item"
             }...`}
-            className="w-full rounded-t-lg bg-white/70 px-4 py-3.5 text-black outline-none"
+            className="w-full rounded-t-lg bg-white/70 px-4 py-3 text-black outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -156,6 +156,7 @@ export default function Home() {
             <ItemWindow
               item={getSelectedItem}
               setItems={setItems}
+              isAdmin={authCache.isAdmin}
               category={categories.categories
                 .find((i) => i.id === getSelectedItem.categoryId)
                 ?.name.toLowerCase()}

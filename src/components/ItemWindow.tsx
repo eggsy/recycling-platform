@@ -67,7 +67,7 @@ export const ItemWindow = ({
           <div className="flex items-center space-x-2">
             <button
               type="button"
-              className="flex items-center justify-center rounded-lg bg-red-600/20 px-4 py-1 text-sm text-red-600 transition-colors hover:bg-red-600/40"
+              className="flex items-center justify-center rounded-lg bg-red-600/20 px-4 py-1 text-xs text-red-600 transition-colors hover:bg-red-600/40"
               title="Delete"
               aria-label="Delete item button"
               onClick={() => handleItemDelete(item.id)}
