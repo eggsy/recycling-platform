@@ -38,6 +38,7 @@ import "@/styles/tailwind.css";
 // Components
 import { Navbar } from "@/components/Navbar";
 import { RecycleBox } from "@/components/RecycleBox";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 
 const inter = Montserrat({
   subsets: ["latin"],
@@ -49,10 +50,12 @@ export default function App({ Component, pageProps }: AppProps) {
   const [authCache, setAuth] = useAtom(authAtom);
   const [, setItems] = useAtom(itemsAtom);
 
-  const { pathname } = useRouter();
+  const [loading, setLoading] = useState(true);
   const [score, setScore] = useState(authCache.userDb?.score || 0);
   const [isActive, setActive] = useState(false);
+
   const debouncedScore = useDebounce(score, 1500);
+  const { pathname } = useRouter();
 
   const mouseSensor = useSensor(MouseSensor);
   const touchSensor = useSensor(TouchSensor);
@@ -89,6 +92,24 @@ export default function App({ Component, pageProps }: AppProps) {
     [authCache.user, setAuth]
   );
 
+  const fetchInitialData = useCallback(async () => {
+    try {
+      const scores = await getScores();
+      const categories = await getCategories();
+
+      setScores(scores);
+      setCategories((p) => ({
+        ...p,
+        categories,
+      }));
+    } catch (err: any) {
+      toast.error(err.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [setCategories, setScores]);
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(onAuthStateChanged);
     return () => unsubscribe();
@@ -96,15 +117,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   /* Fetch categories & scores */
   useEffect(() => {
-    getScores().then((scores) => setScores(scores));
-
-    getCategories().then((categories) =>
-      setCategories((p) => ({
-        ...p,
-        categories,
-      }))
-    );
-  }, [setCategories, setScores]);
+    fetchInitialData();
+  }, [fetchInitialData]);
 
   /* Fetch categoryitems */
   useEffect(() => {
@@ -204,6 +218,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <RecycleBox active={isActive} />
       </DndContext>
 
+      <LoadingOverlay active={loading} />
       <Toaster position="bottom-left" />
     </>
   );
