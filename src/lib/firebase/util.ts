@@ -67,11 +67,11 @@ export const updateScore = async (score: number) => {
 
 export const signInPopup = () => {
   const sure = confirm(
-    "By logging you agree to share your display name and avatar with us."
+    "By logging in you agree to share your display name and avatar with us. Do you wish you continue?"
   );
 
   if (!sure) {
-    toast.error("Okay.");
+    toast.error("Okay, no it is.");
     return;
   }
 
