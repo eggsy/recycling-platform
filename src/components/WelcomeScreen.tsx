@@ -26,12 +26,12 @@ export const WelcomeScreen = ({
     <AnimatePresence>
       {!isFetchingData && isVisible && (
         <MotionFade className="fixed inset-0 z-20 grid place-content-center bg-black/70">
-          <div className="keep-scrolling mx-2 max-h-[95vh] max-w-full rounded-lg bg-white md:m-0 md:mx-auto md:w-5/6">
+          <div className="keep-scrolling mx-2 max-w-full rounded-lg bg-white md:m-0 md:mx-auto md:w-5/6">
             <header className="border-b border-black/10 p-4 text-xl font-bold">
               <h2>Welcome 👋</h2>
             </header>
 
-            <div className="prose prose-blue overflow-y-auto p-4 prose-a:no-underline">
+            <div className="prose prose-blue max-h-[80vh] overflow-y-auto p-4 prose-a:no-underline">
               <p>
                 Hey visitor! Thank you for checking our app out, it is still
                 work in progress but you can see our vision by checking things
@@ -54,11 +54,11 @@ export const WelcomeScreen = ({
                   src="/banner.png"
                   alt="Trailer thumbnail"
                   width={640}
-                  height={360}
+                  height={250}
                   className="rounded-lg object-cover"
                   style={{
                     width: 640,
-                    height: 360,
+                    height: 250,
                   }}
                 />
               </a>
