@@ -28,6 +28,7 @@ import { Select } from "@/components/Form/Select";
 import { FileInput } from "@/components/Form/FileInput";
 import { InputGroup } from "@/components/Form/InputGroup";
 import { Input } from "@/components/Form/Input";
+import { MotionFade } from "@/components/MotionFade";
 
 // Types
 type Category = {
@@ -196,18 +197,7 @@ export default function Admin() {
         {!authCache.isAdmin && <NotAuthorized />}
 
         {authCache.isAdmin && (
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            className="space-y-8"
-          >
+          <MotionFade className="space-y-8">
             <section className="flex flex-col gap-x-10 gap-y-4 md:flex-row md:items-center">
               <div className="flex flex-col gap-x-4 gap-y-2 md:flex-row md:items-center">
                 <span className="text-xs font-medium uppercase text-black/50">
@@ -289,7 +279,7 @@ export default function Admin() {
                 )}
               </AnimatePresence>
             </section>
-          </motion.div>
+          </MotionFade>
         )}
       </AnimatePresence>
     </Layout>
@@ -301,18 +291,7 @@ const NotAuthorized = () => {
   const router = useRouter();
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      exit={{
-        opacity: 0,
-      }}
-      className="fixed inset-0 z-10 flex min-h-[50vh] flex-col items-center justify-center space-y-4 rounded-lg bg-black/80 text-center text-2xl font-bold text-white md:min-h-0"
-    >
+    <MotionFade className="fixed inset-0 z-10 flex min-h-[50vh] flex-col items-center justify-center space-y-4 rounded-lg bg-black/80 text-center text-2xl font-bold text-white md:min-h-0">
       <span>You don{"'"}t have access to this page</span>
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -338,7 +317,7 @@ const NotAuthorized = () => {
           <span>Sign in</span>
         </button>
       </div>
-    </motion.div>
+    </MotionFade>
   );
 };
 
@@ -435,18 +414,7 @@ const CategoryForm = ({
   }, [name, image, setData, edit, categoryId]);
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      exit={{
-        opacity: 0,
-      }}
-      className="space-y-4 md:w-1/3"
-    >
+    <MotionFade className="space-y-4 md:w-1/3">
       {edit && (
         <Select
           label="Category"
@@ -472,7 +440,7 @@ const CategoryForm = ({
         setValue={setImage}
         label={`Image ${image && "(upload to change)"}`}
       />
-    </motion.div>
+    </MotionFade>
   );
 };
 
@@ -550,18 +518,7 @@ const ItemForm = ({
   ]);
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      exit={{
-        opacity: 0,
-      }}
-      className="grid gap-4 md:grid-cols-3"
-    >
+    <MotionFade className="grid gap-4 md:grid-cols-3">
       <section className="space-y-4">
         {edit && (
           <>
@@ -636,6 +593,6 @@ const ItemForm = ({
         setValue={setBenefits}
         placeholder="(e.g. Saves energy.)"
       />
-    </motion.div>
+    </MotionFade>
   );
 };

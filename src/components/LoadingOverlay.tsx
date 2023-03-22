@@ -1,17 +1,13 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { MotionFade } from "@/components/MotionFade";
+import { AnimatePresence } from "framer-motion";
 
 export const LoadingOverlay = ({ active }: { active: boolean }) => {
   return (
     <AnimatePresence initial={false}>
       {active && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 grid place-content-center bg-black/80 text-white"
-        >
+        <MotionFade className="fixed inset-0 grid place-content-center bg-black/80 text-white">
           <Spinner />
-        </motion.div>
+        </MotionFade>
       )}
     </AnimatePresence>
   );
