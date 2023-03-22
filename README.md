@@ -2,11 +2,19 @@
   ♻️ Recycling Platform
 </h1>
 
-We are trying to raise awareness to the importance of recycling. This is a [Google Solution Challenge 2023](https://developers.google.com/community/gdsc-solution-challenge) project that uses Firebase (authentication, analytics, firestore and storage) as well as latest technologies such as React.js, Next.js, Tailwind CSS and Framer Motion to ensure best user experience.
+We are trying to raise awareness to the importance of recycling. This is a [Google Solution Challenge 2023](https://developers.google.com/community/gdsc-solution-challenge) project that uses Firebase (authentication, analytics, firestore and storage) as well as latest technologies such as React.js, Next.js, Tailwind CSS and Framer Motion to ensure best user experience. [Click here for the real-life app](https://recycling.is-important.net).
 
 ## Watch the Trailer
 
 [![Watch the Trailer](/banner.png)](https://youtu.be/tBjP00O3QrU)
+
+## Techstack
+
+- React.js & Next.js
+- Tailwind CSS
+- Google Analytics
+- Firebase (firestore, authentication, storage, analytics)
+- PWA (native apps, offline access)
 
 ## Quick start
 
@@ -24,4 +32,43 @@ Make sure you have [Node.js](https://nodejs.org) and [Git](https://git-scm.com) 
 
 ## Team
 
-We are [eggsy](https://github.com/eggsy) - [iamerloss](https://github.com/iamerloss) - [Semih Özdaş](https://www.linkedin.com/in/semihozdas/)
+<table>
+   <tr>
+     <td align="center">
+        <img src="https://github.com/eggsy.png" height="125" width="125" alt="image" />
+     </td>
+     <td align="center">
+        <img src="https://github.com/merloss.png" height="125" width="125" alt="image" />
+     </td>
+     <td align="center">
+        <img src="https://i.imgur.com/vRi5rP5.jpg" height="125" width="125" alt="image" />
+     </td>
+   </tr>
+   
+   <tr>
+    <td align="center">
+      eggsy
+     </td>
+     <td align="center">
+      merloss
+     </td>
+     <td align="center">
+      Semih Özdaş
+     </td>
+   </tr>
+   
+   <tr>
+    <td align="center">
+      <a href="https://eggsy.xyz">🔗</a> - 
+      <a href="https://linkedin.com/in/abdulbaki-dursun">💼</a>
+     </td>
+     <td align="center">
+      <a href="https://merloss.netlify.app">🔗</a> - 
+      <a href="https://linkedin.com/in/kerimkara0">💼</a>
+     </td>
+     <td align="center">
+      <a href="https://semihozdas.com.tr/">🔗</a> - 
+      <a href="https://linkedin.com/in/semihozdas">💼</a>
+     </td>
+   </tr>
+</table>
