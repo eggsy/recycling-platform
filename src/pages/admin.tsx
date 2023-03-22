@@ -11,7 +11,7 @@ import { useAtom } from "jotai";
 import clsx from "clsx";
 import { authAtom } from "@/store/auth";
 import { NextRouter, useRouter } from "next/router";
-import { signInPopup, firestore } from "@/lib/firebase";
+import { firestore, signInPopup } from "@/lib/firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { toast } from "sonner";
 

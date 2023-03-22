@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 import { getCategories } from "@/lib/getCategories";
 import { getItems } from "@/lib/getItems";
 import { useCallback, useEffect, useState } from "react";
-import { auth, getCurrentUser, updateScore } from "@/lib/firebase";
+import { auth, updateScore, getCurrentUser } from "@/lib/firebase";
 import { useRouter } from "next/router";
 import {
   type DragEndEvent,
@@ -175,10 +175,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Recycling App</title>
+        <title>Importance of Recycling</title>
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
+          content="initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
         />
       </Head>
 

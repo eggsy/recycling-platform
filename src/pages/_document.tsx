@@ -2,11 +2,11 @@ import { Html, Head, Main, NextScript } from "next/document";
 import Image from "next/image";
 
 export default function Document() {
-  const title = "Recycling App";
+  const title = "Recycling is Important";
   const description =
-    "Wonder what happens if you don't recyle? Take a look at items on our database to see what impacts could be done if you recyle.";
+    "Uncover the unknown environmental damage of everyday items with our recycling awareness platform. Discover the power of recycling and help protect the planet.";
   const themeColor = "#BF8D2C";
-  const url = "https://recycling-app.netlify.app";
+  const url = "https://recycling.is-important.net";
 
   return (
     <Html lang="en">
