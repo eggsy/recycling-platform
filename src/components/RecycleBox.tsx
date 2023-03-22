@@ -112,18 +112,6 @@ const Svg = ({ className }: { className?: string }) => {
           />
         </g>
       </g>
-      <defs>
-        <clipPath id="a">
-          <path fill="#fff" d="M0 0H100V100H0z" />
-        </clipPath>
-        <clipPath id="b">
-          <path
-            fill="#fff"
-            d="M0 0H31.707V31.707H0z"
-            transform="translate(34.147 39.024)"
-          />
-        </clipPath>
-      </defs>
     </svg>
   );
 };
