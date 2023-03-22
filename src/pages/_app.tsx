@@ -39,6 +39,7 @@ import "@/styles/tailwind.css";
 import { Navbar } from "@/components/Navbar";
 import { RecycleBox } from "@/components/RecycleBox";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
+import { WelcomeScreen } from "@/components/WelcomeScreen";
 
 const inter = Montserrat({
   subsets: ["latin"],
@@ -218,6 +219,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <RecycleBox active={isActive} />
       </DndContext>
 
+      <WelcomeScreen isFetchingData={loading} />
       <LoadingOverlay active={loading} />
       <Toaster position="bottom-left" />
     </>
