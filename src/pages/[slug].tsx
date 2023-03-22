@@ -1,7 +1,5 @@
 import { readdirSync, readFileSync } from "fs";
-import { useRouter } from "next/router";
 import { join } from "path";
-import { TbChevronLeft } from "react-icons/tb";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote } from "next-mdx-remote";
 

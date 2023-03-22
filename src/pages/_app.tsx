@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isActive, setActive] = useState(false);
 
   const debouncedScore = useDebounce(score, 1500);
-  const { pathname } = useRouter();
+  const { asPath } = useRouter();
 
   const mouseSensor = useSensor(MouseSensor);
   const touchSensor = useSensor(TouchSensor);
@@ -193,7 +193,7 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
-            key={pathname}
+            key={asPath}
             initial={{
               opacity: 0,
               scale: 0.9,
