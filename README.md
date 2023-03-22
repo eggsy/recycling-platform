@@ -2,7 +2,7 @@
   ♻️ Recycling Platform
 </h1>
 
-We are trying to raise awareness to the importance of recycling. This is a Google Solution Challenge 2023 project that uses Firebase (authentication, analytics, firestore and storage) as well as latest technologies such as React.js, Next.js, Tailwind CSS and Framer Motion to ensure best user experience.
+We are trying to raise awareness to the importance of recycling. This is a [Google Solution Challenge 2023](https://developers.google.com/community/gdsc-solution-challenge) project that uses Firebase (authentication, analytics, firestore and storage) as well as latest technologies such as React.js, Next.js, Tailwind CSS and Framer Motion to ensure best user experience.
 
 ## Watch the Trailer
 
