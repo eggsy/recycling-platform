@@ -6,7 +6,7 @@ We are trying to raise awareness to the importance of recycling. This is a [Goog
 
 ## Watch the Trailer
 
-[![Watch the Trailer](/banner.png)](https://youtu.be/tBjP00O3QrU)
+[![Watch the Trailer](/public/banner.png)](https://youtu.be/tBjP00O3QrU)
 
 ## Techstack
 
@@ -44,7 +44,6 @@ Make sure you have [Node.js](https://nodejs.org) and [Git](https://git-scm.com) 
         <img src="https://i.imgur.com/vRi5rP5.jpg" height="125" width="125" alt="image" />
      </td>
    </tr>
-   
    <tr>
     <td align="center">
       eggsy
@@ -56,18 +55,17 @@ Make sure you have [Node.js](https://nodejs.org) and [Git](https://git-scm.com) 
       Semih Özdaş
      </td>
    </tr>
-   
    <tr>
     <td align="center">
-      <a href="https://eggsy.xyz">🔗</a> - 
+      <a href="https://eggsy.xyz">🔗</a> -
       <a href="https://linkedin.com/in/abdulbaki-dursun">💼</a>
      </td>
      <td align="center">
-      <a href="https://merloss.netlify.app">🔗</a> - 
+      <a href="https://merloss.netlify.app">🔗</a> -
       <a href="https://linkedin.com/in/kerimkara0">💼</a>
      </td>
      <td align="center">
-      <a href="https://semihozdas.com.tr/">🔗</a> - 
+      <a href="https://semihozdas.com.tr/">🔗</a> -
       <a href="https://linkedin.com/in/semihozdas">💼</a>
      </td>
    </tr>
