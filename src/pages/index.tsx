@@ -1,22 +1,9 @@
-import {
-  TbSearch,
-  TbX,
-  TbRecycle,
-  TbClock,
-  TbChevronLeft,
-  TbCheck,
-} from "react-icons/tb";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { TbSearch, TbChevronLeft } from "react-icons/tb";
+import { useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import Image from "next/image";
 import { useAtom } from "jotai";
-import { motion, AnimatePresence } from "framer-motion";
-import { deleteDoc, doc } from "firebase/firestore";
-import { toast } from "sonner";
-import { firestore, storage } from "@/lib/firebase";
-import { deleteObject, ref } from "firebase/storage";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-import clsx from "clsx";
 
 // Store
 import { categoriesAtom } from "@/store/categories";
@@ -25,7 +12,7 @@ import { authAtom } from "@/store/auth";
 
 // Components
 import { Card } from "@/components/Card";
-import { DraggableImage } from "@/components/DraggableImage";
+import { ItemWindow } from "@/components/ItemWindow";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -65,29 +52,6 @@ export default function Home() {
     if (!items.selectedItemId) return null;
     return items.items.find((c) => c.id === items.selectedItemId);
   }, [items.items, items.selectedItemId]);
-
-  const handleItemDelete = async (itemId: string) => {
-    const sure = confirm("Are you sure you want to delete this item?");
-
-    if (!sure) {
-      toast.error("Item deletion cancelled.");
-      return;
-    }
-
-    try {
-      await deleteDoc(doc(firestore, `items/${itemId}`));
-      await deleteObject(ref(storage, getSelectedItem?.image));
-
-      setItems((p) => ({
-        ...p,
-        items: p.items.filter((i) => i.id !== itemId),
-      }));
-
-      toast.success("Item deleted successfully.");
-    } catch (err: any) {
-      toast.error(err.message);
-    }
-  };
 
   return (
     <div className="flex flex-col gap-8 md:h-[80vh] md:max-h-[1000px] md:flex-row">
@@ -163,9 +127,10 @@ export default function Home() {
         </ul>
       </aside>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait" initial={false}>
         {getSelectedItem?.id && (
           <motion.main
+            key={getSelectedItem.id}
             initial={{
               opacity: 0,
               translateX: -50,
@@ -188,128 +153,16 @@ export default function Home() {
             }}
             className="flex flex-grow flex-col space-y-4 rounded-lg bg-gray-100/70 ring-1 ring-black/10 backdrop-blur-md"
           >
-            <header className="flex justify-between gap-6 rounded-t-lg bg-white px-6 py-3">
-              <div className="flex items-center gap-3">
-                <TbX
-                  size={24}
-                  className="cursor-pointer rounded-full bg-red-600/10 p-1 text-red-600 transition-colors hover:bg-red-600 hover:text-white"
-                  onClick={() =>
-                    setItems((p) => ({ ...p, selectedItemId: null }))
-                  }
-                />
-
-                <h1 className="font-medium">{getSelectedItem.name}</h1>
-              </div>
-
-              {authCache.isAdmin && (
-                <div className="flex items-center space-x-2">
-                  <button
-                    type="button"
-                    className="flex items-center justify-center rounded-lg bg-red-600/20 px-4 py-1 text-sm text-red-600 transition-colors hover:bg-red-600/40"
-                    title="Delete"
-                    aria-label="Delete item button"
-                    onClick={() => handleItemDelete(getSelectedItem.id)}
-                  >
-                    <TbX />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              )}
-            </header>
-
-            <section className="prose max-w-full px-6 py-4 prose-h3:text-sm prose-h3:uppercase prose-ul:pl-0">
-              {getSelectedItem.image && (
-                <DraggableImage
-                  title={getSelectedItem.name}
-                  image={getSelectedItem.image}
-                />
-              )}
-
-              <p className="mt-0">
-                <Pill>{getSelectedItem.name}</Pill>take(s){" "}
-                <Pill variant="red">
-                  <TbClock className="mr-1.5" />
-                  {getSelectedItem.decomposeTime}
-                </Pill>
-                to decompose. We can protect our environment by throwing them
-                into{" "}
-                <Pill variant="green">
-                  <TbRecycle className="mr-1.5" />
-                  {categories.categories
-                    .find((i) => i.id === getSelectedItem.categoryId)
-                    ?.name.toLowerCase()}
-                </Pill>
-                bin(s).
-              </p>
-
-              {Boolean(getSelectedItem.results?.length) && (
-                <>
-                  <h3>Environmental damage</h3>
-
-                  <ul>
-                    {getSelectedItem.results?.map((result) => (
-                      <li
-                        key={result}
-                        className="not-prose flex space-x-2 pl-0"
-                      >
-                        <TbX
-                          size={24}
-                          className="rounded-full bg-red-600/20 p-1 text-red-600/70"
-                        />
-                        <span className="-mt-[2.5px]">{result}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-
-              {Boolean(getSelectedItem.benefits?.length) && (
-                <>
-                  <h3>When recycled properly</h3>
-
-                  <ul>
-                    {getSelectedItem.benefits?.map((benefit) => (
-                      <li
-                        key={benefit}
-                        className="not-prose flex space-x-2 pl-0"
-                      >
-                        <TbCheck
-                          size={24}
-                          className="rounded-full bg-green-600/20 p-1 text-green-600"
-                        />
-                        <span className="-mt-[2.5px]">{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </section>
+            <ItemWindow
+              item={getSelectedItem}
+              setItems={setItems}
+              category={categories.categories
+                .find((i) => i.id === getSelectedItem.categoryId)
+                ?.name.toLowerCase()}
+            />
           </motion.main>
         )}
       </AnimatePresence>
     </div>
   );
 }
-
-const Pill = ({
-  variant = "black",
-  children,
-}: {
-  variant?: "black" | "red" | "green";
-  children: ReactNode;
-}) => {
-  return (
-    <span
-      className={clsx(
-        "mr-1 inline-flex items-center rounded-lg px-2 py-1 align-middle text-sm font-medium",
-        {
-          "bg-red-600/10 text-red-600": variant === "red",
-          "bg-green-600/10 text-green-600": variant === "green",
-          "bg-black/10 text-black": variant === "black",
-        }
-      )}
-    >
-      {children}
-    </span>
-  );
-};
