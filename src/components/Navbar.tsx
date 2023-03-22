@@ -49,13 +49,13 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
               priority
               src="/logo.png"
               alt="SDG 12"
-              width="150"
-              height="60"
+              width="100"
+              height="55"
               className="rounded-lg md:rounded-none md:rounded-l-lg"
               draggable="false"
               style={{
-                width: "150px",
-                height: "auto",
+                width: "100px",
+                height: "55px",
               }}
             />
           </Link>
