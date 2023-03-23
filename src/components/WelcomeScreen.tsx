@@ -51,6 +51,7 @@ export const WelcomeScreen = ({
                 target="_blank"
               >
                 <Image
+                  priority
                   src="/banner.png"
                   alt="Trailer thumbnail"
                   width={640}
