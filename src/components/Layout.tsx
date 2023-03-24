@@ -9,11 +9,13 @@ export const Layout = ({
   title,
   mainClass,
   rightSide,
+  padding = true,
 }: {
   children: ReactNode;
   title: string;
   mainClass?: string;
   rightSide?: ReactNode;
+  padding?: boolean;
 }) => {
   const router = useRouter();
 
@@ -41,7 +43,8 @@ export const Layout = ({
         <main
           className={clsx(
             mainClass,
-            "keep-scrolling w-full overflow-y-auto p-6"
+            "keep-scrolling w-full overflow-y-auto",
+            padding && "p-6"
           )}
         >
           {children}
