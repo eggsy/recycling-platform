@@ -1,6 +1,6 @@
 {
-  "name": "gdsc-sc",
-  "version": "0.1.0",
+  "name": "recycling-platform",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
