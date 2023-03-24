@@ -121,71 +121,70 @@ export default function MapPage() {
         </div>
       )}
 
-      <div className="absolute inset-0 -z-10 flex min-h-[80vh] items-end overflow-hidden rounded-lg md:min-h-0">
-        {isLoaded && !loading && coords.latitude !== 0 && (
-          <GoogleMap
-            id="map"
-            zoom={14}
-            mapTypeId={google.maps.MapTypeId.ROADMAP}
-            options={{
-              center: {
-                lat: coords.latitude,
-                lng: coords.longtitude,
-              },
-              mapTypeControl: false,
-              fullscreenControl: false,
+      {isLoaded && !loading && coords.latitude !== 0 && (
+        <GoogleMap
+          id="map"
+          zoom={14}
+          mapTypeId={google.maps.MapTypeId.ROADMAP}
+          options={{
+            center: {
+              lat: coords.latitude,
+              lng: coords.longtitude,
+            },
+            mapTypeControl: false,
+            fullscreenControl: false,
+          }}
+          mapContainerStyle={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "0 0 0.5rem 0.5rem",
+          }}
+          onLoad={fetchNearbyCenters}
+        >
+          <MarkerF
+            position={{
+              lat: coords.latitude,
+              lng: coords.longtitude,
             }}
-            mapContainerStyle={{
-              width: "100%",
-              height: "100%",
-            }}
-            onLoad={fetchNearbyCenters}
-          >
+          />
+
+          {markers.map((marker) => (
             <MarkerF
-              position={{
-                lat: coords.latitude,
-                lng: coords.longtitude,
+              key={marker.lat}
+              position={marker}
+              icon={{
+                url: "/marker.png",
+                scaledSize: new google.maps.Size(50, 50),
               }}
-            />
+              onClick={() => toggleWindow(marker)}
+            >
+              {marker.isOpen && (
+                <InfoWindowF
+                  position={marker}
+                  onCloseClick={() => toggleWindow(marker)}
+                >
+                  <div className="flex flex-col items-start space-y-2">
+                    <h1>{marker.title}</h1>
 
-            {markers.map((marker) => (
-              <MarkerF
-                key={marker.lat}
-                position={marker}
-                icon={{
-                  url: "/marker.png",
-                  scaledSize: new google.maps.Size(50, 50),
-                }}
-                onClick={() => toggleWindow(marker)}
-              >
-                {marker.isOpen && (
-                  <InfoWindowF
-                    position={marker}
-                    onCloseClick={() => toggleWindow(marker)}
-                  >
-                    <div className="flex flex-col items-start space-y-2">
-                      <h1>{marker.title}</h1>
+                    <span className="text-xs text-black/50">
+                      {marker.address}
+                    </span>
 
-                      <span className="text-xs text-black/50">
-                        {marker.address}
-                      </span>
-
-                      <a
-                        href={`https://www.google.com/maps/dir/?api=1&destination=${marker.lat},${marker.lng}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-lg bg-blue-600/10 px-3 py-1 text-xs text-blue-600"
-                      >
-                        Get Directions
-                      </a>
-                    </div>
-                  </InfoWindowF>
-                )}
-              </MarkerF>
-            ))}
-          </GoogleMap>
-        )}
-      </div>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${marker.lat},${marker.lng}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-lg bg-blue-600/10 px-3 py-1 text-xs text-blue-600"
+                    >
+                      Get Directions
+                    </a>
+                  </div>
+                </InfoWindowF>
+              )}
+            </MarkerF>
+          ))}
+        </GoogleMap>
+      )}
     </Layout>
   );
 }

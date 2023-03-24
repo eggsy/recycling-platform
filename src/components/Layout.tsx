@@ -43,7 +43,7 @@ export const Layout = ({
         <main
           className={clsx(
             mainClass,
-            "keep-scrolling w-full overflow-y-auto",
+            "keep-scrolling h-full w-full overflow-y-auto",
             padding && "p-6"
           )}
         >
