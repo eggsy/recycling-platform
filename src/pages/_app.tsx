@@ -208,7 +208,7 @@ export default function App({ Component, pageProps }: AppProps) {
               scale: 0.9,
             }}
             className={clsx(
-              inter.className,
+              montserrat.className,
               "container mx-auto  px-4 pb-10 md:w-11/12 md:px-0"
             )}
           >
