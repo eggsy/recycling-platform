@@ -15,12 +15,16 @@ const links = [
     href: "/how",
   },
   {
-    label: "About",
-    href: "/about",
+    label: "Nearby Recycling Centers",
+    href: "/map",
   },
   {
     label: "Scoreboard",
     href: "/scoreboard",
+  },
+  {
+    label: "About",
+    href: "/about",
   },
 ];
 

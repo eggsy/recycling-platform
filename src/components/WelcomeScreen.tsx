@@ -33,15 +33,15 @@ export const WelcomeScreen = ({
 
             <div className="prose prose-blue max-h-[80vh] overflow-y-auto p-4 prose-a:no-underline">
               <p>
-                Hey visitor! Thank you for checking our app out, it is still
-                work in progress but you can see our vision by checking things
-                out.
+                Hey there! Thank you for checking our app out, we are currently
+                in beta and we continue to develop our application, please
+                report any bugs you find.
               </p>
 
               <p>
-                We want to build a platform to help people realise what their
-                everyday items do to our environment, simply, elegantly and
-                accesible. You can watch our trailer here:
+                We want to build a platform to show people what their everyday
+                items do to our environment if not recycled properly. Simply,
+                elegantly and accesible. You can watch our trailer here:
               </p>
 
               <a
