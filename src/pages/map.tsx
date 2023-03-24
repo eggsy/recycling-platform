@@ -80,8 +80,6 @@ export default function MapPage() {
           return;
         }
 
-        console.log(results);
-
         if (status === google.maps.places.PlacesServiceStatus.OK && results) {
           setMarkers(
             results.map((result) => ({
@@ -137,7 +135,7 @@ export default function MapPage() {
           mapContainerStyle={{
             width: "100%",
             height: "100%",
-            borderRadius: "0 0 0.5rem 0.5rem",
+            minHeight: "70vh",
           }}
           onLoad={fetchNearbyCenters}
         >
