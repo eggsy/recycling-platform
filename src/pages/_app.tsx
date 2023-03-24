@@ -41,7 +41,7 @@ import { RecycleBox } from "@/components/RecycleBox";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 
-const inter = Montserrat({
+const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
@@ -183,7 +183,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
       </Head>
 
-      <Navbar fontFamily={inter.className} />
+      <Navbar fontFamily={montserrat.className} />
 
       <DndContext
         onDragEnd={handleDragEnd}
