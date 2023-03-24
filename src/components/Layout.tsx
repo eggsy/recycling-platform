@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import { TbChevronLeft } from "react-icons/tb";
@@ -17,26 +18,35 @@ export const Layout = ({
   const router = useRouter();
 
   return (
-    <div className="flex flex-col rounded-lg bg-white/70 backdrop-blur-md md:h-[80vh] md:max-h-[1000px]">
-      <header className="flex items-center justify-between rounded-t-lg bg-white px-6 py-3">
-        <div className="flex items-center gap-3 ">
-          <TbChevronLeft
-            size={24}
-            className="cursor-pointer rounded-full bg-black/10 p-1 text-black/90 transition-colors hover:bg-black hover:text-white"
-            onClick={() => router.back()}
-          />
+    <>
+      <Head>
+        <title>{title}</title>
+      </Head>
 
-          <h1 className="font-medium">{title}</h1>
-        </div>
+      <div className="flex flex-col rounded-lg bg-white/70 backdrop-blur-md md:h-[80vh] md:max-h-[1000px]">
+        <header className="flex items-center justify-between rounded-t-lg bg-white px-6 py-3">
+          <div className="flex items-center gap-3 ">
+            <TbChevronLeft
+              size={24}
+              className="cursor-pointer rounded-full bg-black/10 p-1 text-black/90 transition-colors hover:bg-black hover:text-white"
+              onClick={() => router.back()}
+            />
 
-        {rightSide}
-      </header>
+            <h1 className="font-medium">{title}</h1>
+          </div>
 
-      <main
-        className={clsx(mainClass, "keep-scrolling w-full overflow-y-auto p-6")}
-      >
-        {children}
-      </main>
-    </div>
+          {rightSide}
+        </header>
+
+        <main
+          className={clsx(
+            mainClass,
+            "keep-scrolling w-full overflow-y-auto p-6"
+          )}
+        >
+          {children}
+        </main>
+      </div>
+    </>
   );
 };
