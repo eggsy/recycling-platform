@@ -35,10 +35,14 @@ Make sure you have [Node.js](https://nodejs.org) and [Git](https://git-scm.com) 
 <table>
    <tr>
      <td align="center">
-        <img src="https://github.com/eggsy.png" height="125" width="125" alt="image" />
+         <a href="https://github.com/eggsy">
+            <img src="https://github.com/eggsy.png" height="125" width="125" alt="image" />
+         </a>
      </td>
      <td align="center">
-        <img src="https://github.com/merloss.png" height="125" width="125" alt="image" />
+         <a href="https://github.com/merloss">
+           <img src="https://github.com/merloss.png" height="125" width="125" alt="image" />
+         </a>
      </td>
      <td align="center">
         <img src="https://i.imgur.com/vRi5rP5.jpg" height="125" width="125" alt="image" />

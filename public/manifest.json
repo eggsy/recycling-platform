@@ -1,7 +1,7 @@
 {
-  "name": "Recycling App",
+  "name": "Recycling Platform",
   "short_name": "Recycle",
-  "description": "Wonder what happens if you don't recyle? Take a look at items on our database to see what impacts could be done if you recyle.",
+  "description": "Uncover the unknown environmental damage of everyday items with our recycling awareness platform. Discover the power of recycling and help protect the planet.",
   "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
