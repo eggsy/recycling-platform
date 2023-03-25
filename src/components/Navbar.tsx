@@ -43,7 +43,7 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
       ref={parent}
       className={clsx(
         fontFamily,
-        "container mx-auto mb-4 flex flex-col gap-4 rounded-lg bg-gray-100/90 py-2 px-4 ring-1 ring-white/10 backdrop-blur-md md:my-6 md:w-11/12 md:py-0 md:px-0"
+        "container mx-auto mb-4 flex flex-col gap-4 rounded-lg bg-gray-100/90 py-2 px-4 ring-1 ring-white/10 backdrop-blur-md lg:my-6 lg:w-11/12 lg:py-0 lg:px-0"
       )}
     >
       <div className="flex items-center justify-between">
@@ -55,7 +55,7 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
               alt="SDG 12"
               width="100"
               height="55"
-              className="rounded-lg md:rounded-none md:rounded-l-lg"
+              className="rounded-lg lg:rounded-none lg:rounded-l-lg"
               draggable="false"
               style={{
                 width: "100px",
@@ -64,15 +64,15 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
             />
           </Link>
 
-          <Links isAdmin={authCache.isAdmin} className="hidden md:block" />
+          <Links isAdmin={authCache.isAdmin} className="hidden lg:block" />
         </div>
 
         <div
           title="User Profile"
-          className="no-highlight flex flex-col p-2 text-black md:mr-4"
+          className="no-highlight flex flex-col p-2 text-black lg:mr-4"
         >
           {!authCache.user ? (
-            <LoginButton className="hidden md:flex" signInPopup={signInPopup} />
+            <LoginButton className="hidden lg:flex" signInPopup={signInPopup} />
           ) : (
             <NavbarUser
               score={authCache.userDb?.score}
@@ -89,7 +89,7 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
               title="Open menu"
               onClick={() => setOpen(true)}
             >
-              <TbMenu2 size={24} className="md:hidden" />
+              <TbMenu2 size={24} className="lg:hidden" />
             </button>
           )}
 
@@ -100,7 +100,7 @@ export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
               title="Close menu"
               onClick={() => setOpen(false)}
             >
-              <TbX size={24} className="md:hidden" />
+              <TbX size={24} className="lg:hidden" />
             </button>
           )}
         </div>
@@ -142,7 +142,7 @@ const Links = ({
   return (
     <div
       className={clsx(
-        "flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-6",
+        "flex flex-col space-y-2 lg:flex-row lg:space-y-0 lg:space-x-6",
         className
       )}
     >
@@ -150,7 +150,7 @@ const Links = ({
         <Link
           key={link.href}
           href={link.href}
-          className="select-none rounded-lg bg-black/5 py-2 px-4 font-medium text-black/50 transition-colors hover:text-black md:bg-transparent md:hover:bg-transparent"
+          className="select-none rounded-lg bg-black/5 py-2 px-4 font-medium text-black/50 transition-colors hover:text-black lg:bg-transparent lg:hover:bg-transparent"
         >
           {link.label}
         </Link>
@@ -169,7 +169,7 @@ const LoginButton = ({
   <button
     type="button"
     className={clsx(
-      "mb-3 flex items-center justify-center space-x-2 font-medium md:mb-0 md:justify-start",
+      "mb-3 flex items-center justify-center space-x-2 font-medium lg:mb-0 lg:justify-start",
       className
     )}
     title="Sign in"
@@ -199,10 +199,10 @@ const NavbarUser = ({
       "items-center space-x-2",
       type === "mobile"
         ? "mb-3 flex justify-between rounded-lg"
-        : "hidden md:flex"
+        : "hidden lg:flex"
     )}
   >
-    <div className="flex flex-row-reverse items-center gap-2 md:flex-row">
+    <div className="flex flex-row-reverse items-center gap-2 lg:flex-row">
       {Boolean(score) && (
         <span
           className="grid place-content-center rounded-full bg-green-600/20 px-2 text-sm text-green-600"

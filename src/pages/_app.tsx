@@ -220,7 +220,9 @@ export default function App({ Component, pageProps }: AppProps) {
       </DndContext>
 
       <WelcomeScreen isFetchingData={loading} />
-      <LoadingOverlay active={loading} />
+      <LoadingOverlay
+        active={["/", "/scoreboard"].includes(pathname) && loading}
+      />
       <Toaster position="bottom-left" />
     </>
   );

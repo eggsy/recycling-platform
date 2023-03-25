@@ -25,9 +25,9 @@ export const Layout = ({
         <title>{title}</title>
       </Head>
 
-      <div className="flex flex-col rounded-lg bg-white/70 backdrop-blur-md md:h-[80vh] md:max-h-[1000px]">
-        <header className="flex items-center justify-between rounded-t-lg bg-white px-6 py-3">
-          <div className="flex items-center gap-3 ">
+      <div className="flex h-[80vh] flex-col rounded-lg bg-white/70 backdrop-blur-md md:max-h-[1000px]">
+        <header className="flex flex-shrink-0 items-center justify-between rounded-t-lg bg-white px-6 py-3">
+          <div className="flex  items-center gap-3 ">
             <TbChevronLeft
               size={24}
               className="cursor-pointer rounded-full bg-black/10 p-1 text-black/90 transition-colors hover:bg-black hover:text-white"
@@ -43,7 +43,7 @@ export const Layout = ({
         <main
           className={clsx(
             mainClass,
-            "keep-scrolling h-full w-full overflow-y-auto",
+            "keep-scrolling h-full w-full flex-grow overflow-y-auto md:h-auto",
             padding && "p-6"
           )}
         >

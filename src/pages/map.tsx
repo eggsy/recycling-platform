@@ -135,7 +135,7 @@ export default function MapPage() {
           mapContainerStyle={{
             width: "100%",
             height: "100%",
-            minHeight: "70vh",
+            borderRadius: "0 0 0.5rem 0.5rem",
           }}
           onLoad={fetchNearbyCenters}
         >

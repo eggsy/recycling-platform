@@ -48,7 +48,7 @@ export default function Post(props: any) {
 }
 
 const TargetedGoals = () => (
-  <div className="flex flex-wrap gap-4">
+  <div className="flex flex-wrap my-10 gap-2">
     {[
       "https://i.imgur.com/tq5Kl40.jpg",
       "https://i.imgur.com/z297DNB.jpg",
@@ -64,6 +64,7 @@ const TargetedGoals = () => (
         height="150"
         alt="Targeted Goal"
         draggable="false"
+        className="my-0"
         style={{
           width: 150,
           height: 150,
