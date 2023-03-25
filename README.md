@@ -8,6 +8,16 @@ We are trying to raise awareness to the importance of recycling. This is a [Goog
 
 [![Watch the Trailer](/public/banner.png)](https://youtu.be/tBjP00O3QrU)
 
+## Features
+
+- Easy to use and simple UI.
+- Efficient data with Firestore.
+- User authentication with Firebase.
+- Admin dashboard.
+- Nearby recycling centers map with Google Maps API.
+- File upload with Filepond to Firebase Storage.
+- Smooth animations with Framer Motion and FormKit AutoAnimate.
+
 ## Techstack
 
 - React.js & Next.js
