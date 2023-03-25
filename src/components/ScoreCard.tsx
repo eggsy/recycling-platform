@@ -4,19 +4,15 @@ import { IUser } from "@/store/auth";
 export const ScoreCard = ({ displayName, avatar, score, isAdmin }: IUser) => {
   return (
     <div className="flex items-center space-x-4 rounded-lg bg-black/5 px-6 py-2">
-      <div className="relative">
-        {isAdmin && <div className="absolute inset-x-0 -bottom-1"></div>}
-
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={avatar}
-          alt={`Avatar of ${displayName}`}
-          width="60"
-          height="60"
-          className="flex-shrink-0 rounded-full object-cover"
-          draggable="false"
-        />
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={avatar}
+        alt={`Avatar of ${displayName}`}
+        width="60"
+        height="60"
+        className="flex-shrink-0 rounded-full object-cover"
+        draggable="false"
+      />
 
       <div className="flex flex-col items-start space-y-1">
         <span className="font-medium">{displayName}</span>

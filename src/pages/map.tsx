@@ -111,7 +111,7 @@ export default function MapPage() {
   };
 
   return (
-    <Layout title="Nearby Recycling Centers" padding={false}>
+    <Layout title="Nearby Recycling Centers" padding={false} grow>
       {!loading && !Boolean(coords.latitude) && (
         <div className="p-6 text-black/50">
           ⛔ Make sure you have given us permission to access your location (we

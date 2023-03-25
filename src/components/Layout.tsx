@@ -10,12 +10,14 @@ export const Layout = ({
   mainClass,
   rightSide,
   padding = true,
+  grow,
 }: {
   children: ReactNode;
   title: string;
   mainClass?: string;
   rightSide?: ReactNode;
   padding?: boolean;
+  grow?: boolean;
 }) => {
   const router = useRouter();
 
@@ -43,8 +45,9 @@ export const Layout = ({
         <main
           className={clsx(
             mainClass,
-            "keep-scrolling h-full w-full flex-grow overflow-y-auto md:h-auto",
-            padding && "p-6"
+            "keep-scrolling w-full overflow-y-auto",
+            padding && "p-6",
+            grow && "flex-grow"
           )}
         >
           {children}
