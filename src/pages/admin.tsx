@@ -6,7 +6,7 @@ import {
   TbHome,
   TbDeviceFloppy,
 } from "react-icons/tb";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useAtom } from "jotai";
 import clsx from "clsx";
 import { authAtom } from "@/store/auth";
