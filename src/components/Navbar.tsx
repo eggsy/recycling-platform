@@ -2,8 +2,8 @@ import { TbMenu2, TbX, TbLogout, TbLogin } from "react-icons/tb";
 import Image from "next/image";
 import clsx from "clsx";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import autoAnimate from "@formkit/auto-animate";
 import { auth, signInPopup } from "@/lib/firebase";
 import { useAtom } from "jotai";
 import { authAtom } from "@/store/auth";
@@ -31,19 +31,23 @@ const links = [
 export const Navbar = ({ fontFamily }: { fontFamily: string }) => {
   const [isOpen, setOpen] = useState(false);
   const [authCache] = useAtom(authAtom);
-  const [parent] = useAutoAnimate();
+  const parent = useRef(null);
 
   const handleLogout = async () => {
     await auth.signOut();
     toast.error("You have been logged out.");
   };
 
+  useEffect(() => {
+    if (parent.current) autoAnimate(parent.current);
+  }, [parent]);
+
   return (
     <nav
       ref={parent}
       className={clsx(
         fontFamily,
-        "container mx-auto mb-4 flex flex-col gap-4 rounded-lg bg-gray-100/90 py-2 px-4 ring-1 ring-white/10 backdrop-blur-md lg:my-6 lg:w-11/12 lg:py-0 lg:px-0"
+        "container mx-auto mb-4 flex flex-col gap-4 rounded-lg bg-gray-100/90 px-4 py-2 ring-1 ring-white/10 backdrop-blur-md lg:my-6 lg:w-11/12 lg:px-0 lg:py-0"
       )}
     >
       <div className="flex items-center justify-between">
@@ -142,7 +146,7 @@ const Links = ({
   return (
     <div
       className={clsx(
-        "flex flex-col space-y-2 lg:flex-row lg:space-y-0 lg:space-x-6",
+        "flex flex-col space-y-2 lg:flex-row lg:space-x-6 lg:space-y-0",
         className
       )}
     >
@@ -150,7 +154,7 @@ const Links = ({
         <Link
           key={link.href}
           href={link.href}
-          className="select-none rounded-lg bg-black/5 py-2 px-4 font-medium text-black/50 transition-colors hover:text-black lg:bg-transparent lg:hover:bg-transparent"
+          className="select-none rounded-lg bg-black/5 px-4 py-2 font-medium text-black/50 transition-colors hover:text-black lg:bg-transparent lg:hover:bg-transparent"
         >
           {link.label}
         </Link>

@@ -1,6 +1,6 @@
 import { TbSearch, TbChevronLeft } from "react-icons/tb";
-import { useEffect, useMemo, useState } from "react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -16,12 +16,16 @@ import { ItemWindow } from "@/components/ItemWindow";
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [parent] = useAutoAnimate();
+  const parent = useRef(null);
   const router = useRouter();
 
   const [categories, setCategories] = useAtom(categoriesAtom);
   const [items, setItems] = useAtom(itemsAtom);
   const [authCache] = useAtom(authAtom);
+
+  useEffect(() => {
+    if (parent.current) autoAnimate(parent.current);
+  }, [parent]);
 
   useEffect(() => {
     const search = (router.query.q ||
