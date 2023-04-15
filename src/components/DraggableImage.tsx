@@ -28,7 +28,7 @@ export const DraggableImage = ({
       alt="Image"
       width={250}
       height={250}
-      className="my:mb-0 my-0 mb-6 flex-shrink-0 rounded-lg object-cover ring-1 ring-black/10 md:float-right"
+      className="my:mb-0 my-0 mb-6 md:ml-2 flex-shrink-0 rounded-lg object-cover ring-1 ring-black/10 md:float-right"
       draggable="false"
       style={{
         height: 250,
