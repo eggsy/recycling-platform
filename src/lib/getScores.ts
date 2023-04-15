@@ -24,6 +24,7 @@ export const getScores = async () => {
 
   for (const snapshot of querySnapshot.docs) {
     results.push({
+      uid: snapshot.id,
       ...snapshot.data(),
     } as IUser);
   }

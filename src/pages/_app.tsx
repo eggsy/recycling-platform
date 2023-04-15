@@ -46,7 +46,7 @@ const montserrat = Montserrat({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [, setScores] = useAtom(scoresAtom);
+  const [scoreCache, setScores] = useAtom(scoresAtom);
   const [category, setCategories] = useAtom(categoriesAtom);
   const [authCache, setAuth] = useAtom(authAtom);
   const [, setItems] = useAtom(itemsAtom);
@@ -147,11 +147,44 @@ export default function App({ Component, pageProps }: AppProps) {
             score: debouncedScore,
           } as IUser,
         }));
+
+        const userInScoreboard = scoreCache.find(
+          (s) => s.uid === authCache.user?.uid
+        );
+
+        if (userInScoreboard) {
+          setScores((p) =>
+            p.map((s) =>
+              s.uid === authCache.user?.uid
+                ? { ...s, score: debouncedScore }
+                : s
+            )
+          );
+        } else if (authCache.user) {
+          setScores((p) => [
+            ...p,
+            {
+              uid: authCache.user?.uid,
+              displayName: authCache.user?.displayName,
+              avatar: authCache.user?.photoURL,
+              score: debouncedScore,
+              isAdmin: authCache.isAdmin,
+            } as IUser,
+          ]);
+        }
       })
       .catch(() =>
         toast.error("Something went wrong while saving your score!")
       );
-  }, [authCache.userDb?.score, debouncedScore, setAuth]);
+  }, [
+    authCache.userDb?.score,
+    authCache.user,
+    authCache.isAdmin,
+    scoreCache,
+    setScores,
+    debouncedScore,
+    setAuth,
+  ]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { over, active } = event;

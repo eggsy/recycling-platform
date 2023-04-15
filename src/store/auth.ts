@@ -2,6 +2,7 @@ import { atom } from "jotai";
 import type { User } from "firebase/auth";
 
 export interface IUser {
+  uid?: string;
   displayName: string;
   avatar: string;
   score: number;
